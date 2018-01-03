@@ -1224,8 +1224,11 @@
 			}
 
 		#header .logo {
-			width: 5.5rem;
-			height: 5.5rem;
+			/*width: 5.5rem;
+			height: 5.5rem;*/
+			/*jauregui*/
+			width: 7.5rem;
+			height: 7.5rem;
 			line-height: 5.5rem;
 			border: solid 1px #ffffff;
 			border-radius: 100%;
@@ -1374,8 +1377,11 @@
 				}
 
 			#header .logo {
-				width: 4.75rem;
-				height: 4.75rem;
+				/*width: 4.75rem;
+				height: 4.75rem;*/
+				/*jauregui*/
+				width: 7.75rem;
+				height: 7.75rem;
 				line-height: 4.75rem;
 			}
 
