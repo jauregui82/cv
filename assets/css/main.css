@@ -1598,3 +1598,7 @@
 		body.is-loading #footer {
 			opacity: 0;
 		}
+
+		.imgPort{
+			width: 100%;
+		}
