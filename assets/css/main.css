@@ -47,6 +47,9 @@
 	body {
 		-webkit-text-size-adjust: none;
 	}
+	.progress-bar {
+		background-color: rgba(36, 39, 43, 0.92);
+	}
 
 /* Box Model */
 
