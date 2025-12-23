@@ -407,3 +407,75 @@
 	});
 
 })(jQuery);
+// Language switcher functionality
+let currentLang = 'es'; // Default language
+
+function changeLanguage(lang) {
+	currentLang = lang;
+	
+	// Update button states
+	document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+	document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+	
+	// Get all elements with language attributes
+	const elements = document.querySelectorAll('[data-lang-es][data-lang-en]');
+	
+	elements.forEach(element => {
+		const text = element.getAttribute('data-lang-' + lang);
+		if (text) {
+			element.textContent = text;
+		}
+	});
+	
+	// Save preference in localStorage
+	localStorage.setItem('preferredLanguage', lang);
+}
+
+// Load saved language preference on page load
+window.addEventListener('DOMContentLoaded', function() {
+	const savedLang = localStorage.getItem('preferredLanguage');
+	if (savedLang && (savedLang === 'en' || savedLang === 'es')) {
+		changeLanguage(savedLang);
+	}
+});
+
+// Portfolio Image Modal Functions
+function openModal(imgElement) {
+	const modal = document.getElementById('imageModal');
+	const modalImg = document.getElementById('modalImage');
+	const captionText = document.getElementById('modalCaption');
+	
+	modal.style.display = 'block';
+	modalImg.src = imgElement.src;
+	captionText.innerHTML = imgElement.getAttribute('data-title') || imgElement.alt;
+	
+	// Prevent body scroll when modal is open
+	document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+	const modal = document.getElementById('imageModal');
+	modal.style.display = 'none';
+	
+	// Restore body scroll
+	document.body.style.overflow = 'auto';
+}
+
+// Close modal when clicking outside the image
+document.addEventListener('DOMContentLoaded', function() {
+	const modal = document.getElementById('imageModal');
+	if (modal) {
+		modal.addEventListener('click', function(event) {
+if (event.target === modal) {
+closeModal();
+			}
+		});
+	}
+	
+	// Close modal with ESC key
+	document.addEventListener('keydown', function(event) {
+if (event.key === 'Escape') {
+closeModal();
+		}
+	});
+});
