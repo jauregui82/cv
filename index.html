@@ -51,17 +51,26 @@
 
 <body>
 
+	<!-- Language Selector -->
+	<div class="language-selector">
+		<button onclick="changeLanguage('es')" id="btn-es" class="lang-btn active">ES</button>
+		<button onclick="changeLanguage('en')" id="btn-en" class="lang-btn">EN</button>
+	</div>
+
 	<!-- Wrapper -->
 	<div id="wrapper">
 
 		<!-- Header -->
 		<header id="header">
-			<div class="logo">
-				<!-- <span class="icon fa-diamond"></span> -->
-				<span>
-					<img style="width: 100%; border-radius: 50%;" src="https://avatars0.githubusercontent.com/u/13053881?s=400&u=608e5c8eb29c6c8083a9128a725dbbb919622c4d&v=4"
-					 alt="">
-				</span>
+			<div class="logo-container">
+				<!-- Logo -->
+				<div class="logo">
+					<!-- <span class="icon fa-diamond"></span> -->
+					<span>
+						<img style="width: 100%; border-radius: 50%;" src="https://avatars0.githubusercontent.com/u/13053881?s=400&u=608e5c8eb29c6c8083a9128a725dbbb919622c4d&v=4"
+						alt="">
+					</span>
+				</div>
 			</div>
 			<div class="content">
 				<div class="inner">
@@ -70,11 +79,6 @@
 					</p>
 					<br />
 					<em data-lang-es="Construyendo aplicaciones web escalables y de alto rendimiento" data-lang-en="Building scalable and high-performance web applications">Construyendo aplicaciones web escalables y de alto rendimiento</em>
-					<br />
-					<div class="language-selector" style="margin-top: 20px;">
-						<button onclick="changeLanguage('es')" id="btn-es" class="lang-btn active">ES</button>
-						<button onclick="changeLanguage('en')" id="btn-en" class="lang-btn">EN</button>
-					</div>
 				</div>
 			</div>
 			<nav>
@@ -305,7 +309,7 @@
 				<form method="post" action="submit.php">
 					<ul style="list-style: none; line-height: 2.5em;">
 						<li class="fa fa-envelope-o">
-							<span data-lang-es=" Correo:" data-lang-en=" Email:"> Correo:
+							<span> Email:
 								<a href="mailto:jauregui.crespo@gmail.com">jauregui.crespo@gmail.com</a>
 							</span>
 						</li>
@@ -343,12 +347,12 @@
 									</ul>
  -->
 				</form>
-				<ul class="icons">
+				<!-- <ul class="icons">
 					<li>
 						<a target="_blank" href="https://www.linkedin.com/in/jauregui-crespo-35743aa5/" class="icon fa-linkedin">
 							<span class="label">Linkedin</span>
 						</a>
-					</li>
+					</li> -->
 					<!--<li><a href="https://github.com/jauregui82" class="icon fa-github"><span class="label">GitHub</span></a></li>-->
 				</ul>
 			</article>
@@ -363,9 +367,7 @@
 	<div id="bg"></div>
 
 	<!-- Scripts -->
-	<script src="assets/js/jquery.min.js"></script>
 	<script src="assets/js/skel.min.js"></script>
-	<script src="assets/js/util.js"></script>
 	<script src="assets/js/main.js"></script>
 </body>
 

@@ -1226,6 +1226,22 @@
 				display: none;
 			}
 
+		#header .logo-container {
+			display: -moz-flex;
+			display: -webkit-flex;
+			display: -ms-flex;
+			display: flex;
+			-moz-justify-content: center;
+			-webkit-justify-content: center;
+			-ms-justify-content: center;
+			justify-content: center;
+			-moz-align-items: center;
+			-webkit-align-items: center;
+			-ms-align-items: center;
+			align-items: center;
+			width: 100%;
+		}
+
 		#header .logo {
 			/*width: 5.5rem;
 			height: 5.5rem;*/
@@ -1275,6 +1291,7 @@
 			}
 
 		#header nav ul {
+			justify-content: center;
 			display: -moz-flex;
 			display: -webkit-flex;
 			display: -ms-flex;
@@ -1610,9 +1627,12 @@
 		}
 /* Language Selector Styles */
 .language-selector {
+	position: fixed;
+	top: 20px;
+	right: 20px;
 	display: flex;
 	gap: 10px;
-	justify-content: center;
+	z-index: 10000;
 }
 
 .lang-btn {
@@ -1620,13 +1640,21 @@
 	border: 1px solid rgba(255, 255, 255, 0.35);
 	color: #ffffff;
 	cursor: pointer;
-	padding: 8px 16px;
-	font-size: 0.9rem;
+	padding: 4px 12px;
+	font-size: 0.75rem;
 	font-weight: 600;
 	letter-spacing: 0.075em;
 	text-transform: uppercase;
 	border-radius: 4px;
 	transition: all 0.3s ease;
+	outline: none;
+	line-height: 1;
+	min-height: auto;
+}
+
+.lang-btn:focus {
+	outline: none;
+	box-shadow: none;
 }
 
 .lang-btn:hover {
@@ -1640,91 +1668,19 @@
 	box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
 }
 
-/* Portfolio Image Modal Styles */
-.portfolio-img {
-	cursor: pointer;
-	transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.portfolio-img:hover {
-	transform: scale(1.05);
-	opacity: 0.8;
-}
-
-.modal-portfolio {
-	display: none;
-	position: fixed;
-	z-index: 10000;
-	padding-top: 50px;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
-	overflow: auto;
-	background-color: rgba(0, 0, 0, 0.95);
-	animation: fadeIn 0.3s;
-}
-
-@keyframes fadeIn {
-	from { opacity: 0; }
-	to { opacity: 1; }
-}
-
-.modal-content-portfolio {
-	margin: auto;
-	display: block;
-	max-width: 90%;
-	max-height: 80vh;
-	object-fit: contain;
-	animation: zoomIn 0.3s;
-}
-
-@keyframes zoomIn {
-	from { transform: scale(0.7); }
-	to { transform: scale(1); }
-}
-
-.modal-close {
-	position: absolute;
-	top: 15px;
-	right: 35px;
-	color: #ffffff;
-	font-size: 40px;
-	font-weight: bold;
-	transition: 0.3s;
-	cursor: pointer;
-	z-index: 10001;
-}
-
-.modal-close:hover,
-.modal-close:focus {
-	color: #bbb;
-	text-decoration: none;
-	cursor: pointer;
-}
-
-.modal-caption {
-	margin: auto;
-	display: block;
-	width: 80%;
-	max-width: 700px;
-	text-align: center;
-	color: #ccc;
-	padding: 10px 0;
-	height: 40px;
-	font-size: 1.1rem;
-	margin-top: 20px;
-}
-
-@media only screen and (max-width: 700px) {
-	.modal-content-portfolio {
-		max-width: 95%;
-		max-height: 70vh;
+@media screen and (max-width: 480px) {
+	.language-selector {
+		top: 10px;
+		right: 10px;
 	}
 	
-	.modal-close {
-		top: 10px;
-		right: 20px;
-		font-size: 35px;
+	.lang-btn {
+		padding: 3px 12px;
+		font-size: 0.8rem;
 	}
+}
+
+/* Fix scrollbar shift when modal opens */
+html {
+	overflow-y: scroll;
 }
