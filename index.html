@@ -1,10 +1,35 @@
 <!doctype html>
 <html lang="es">
   <head>
+    <script>
+      // Set the "Noche"/"Día" variant on <html> synchronously, before any
+      // stylesheet applies, so there is no flash of the wrong variant.
+      // Mirrors docs/design/mockup.html's initialV logic exactly.
+      (function () {
+        try {
+          var stored = localStorage.getItem('jau-v');
+          var v =
+            stored === 'noche' || stored === 'dia'
+              ? stored
+              : matchMedia('(prefers-color-scheme: light)').matches
+                ? 'dia'
+                : 'noche';
+          document.documentElement.dataset.v = v;
+        } catch (e) {
+          document.documentElement.dataset.v = 'noche';
+        }
+      })();
+    </script>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Curriculum Vitae Jauregui Crespo - Front-End Engineer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
     <title>Jauregui Crespo CV</title>
   </head>
   <body>

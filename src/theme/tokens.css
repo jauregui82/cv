@@ -1,0 +1,130 @@
+/*
+ * Design tokens for the two visual variants ("Noche" / "Día").
+ * Mirrors docs/design/mockup.html's `root.dataset.v` mechanism:
+ * bare :root defaults to Noche, a prefers-color-scheme:light media query
+ * offers a Día fallback for hosts without an explicit choice, and
+ * [data-v="noche"|"dia"] always wins once the variant is known
+ * (set synchronously in index.html to avoid a flash of the wrong variant).
+ */
+
+:root {
+  color-scheme: dark;
+  --bg: #0a0b0e;
+  --bg-2: #14161c;
+  --ink: #ece8e1;
+  --muted: #8e919b;
+  --line: #272a33;
+  --accent: #ffb547;
+  --accent-ink: #0a0b0e;
+
+  --display: 'Bricolage Grotesque', 'Arial Narrow', system-ui, sans-serif;
+  --display-w: 800;
+  --display-track: -0.045em;
+  --display-stretch: 'wdth' 78;
+  --body: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --grain: 0.06;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-v='noche']) {
+    color-scheme: light;
+    --bg: #e5e6e9;
+    --bg-2: #d9dbe0;
+    --ink: #101218;
+    --muted: #5a5e69;
+    --line: #c3c6ce;
+    --accent: #2b43e0;
+    --accent-ink: #ffffff;
+    --display: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+    --display-w: 400;
+    --display-track: -0.03em;
+    --display-stretch: normal;
+    --grain: 0;
+  }
+}
+
+:root[data-v='noche'] {
+  color-scheme: dark;
+  --bg: #0a0b0e;
+  --bg-2: #14161c;
+  --ink: #ece8e1;
+  --muted: #8e919b;
+  --line: #272a33;
+  --accent: #ffb547;
+  --accent-ink: #0a0b0e;
+  --display: 'Bricolage Grotesque', 'Arial Narrow', system-ui, sans-serif;
+  --display-w: 800;
+  --display-track: -0.045em;
+  --display-stretch: 'wdth' 78;
+  --grain: 0.06;
+}
+
+:root[data-v='dia'] {
+  color-scheme: light;
+  --bg: #e5e6e9;
+  --bg-2: #d9dbe0;
+  --ink: #101218;
+  --muted: #5a5e69;
+  --line: #c3c6ce;
+  --accent: #2b43e0;
+  --accent-ink: #ffffff;
+  --display: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --display-w: 400;
+  --display-track: -0.03em;
+  --display-stretch: normal;
+  --grain: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 17px/1.6 var(--body);
+  transition:
+    background-color 0.5s ease,
+    color 0.5s ease;
+}
+
+body::after {
+  /* film grain, Noche only (--grain is 0 in Día) */
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
+  opacity: var(--grain);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.wrap {
+  padding-inline: clamp(16px, 4vw, 56px);
+  max-width: 1440px;
+  margin-inline: auto;
+}
+
+.mono {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.display {
+  font-family: var(--display);
+  font-weight: var(--display-w);
+  letter-spacing: var(--display-track);
+  font-variation-settings: var(--display-stretch);
+  line-height: 0.86;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.kicker {
+  color: var(--accent);
+}
