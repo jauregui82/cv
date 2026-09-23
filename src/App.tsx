@@ -1,16 +1,15 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { Header } from './components/Header/Header'
-import { Hero } from './components/Hero/Hero'
-import { About } from './components/About/About'
-import { Experience } from './components/Experience/Experience'
-import { Contact } from './components/Contact/Contact'
-import { AvatarDock } from './components/Avatar/AvatarDock'
+import { Hero } from './sections/Hero'
+import { About } from './sections/About'
+import { Specs } from './sections/Specs'
+import { Work } from './sections/Work'
+import { Contact } from './sections/Contact'
 import { useLanguage } from './hooks/useLanguage'
 import './App.css'
 
 function App() {
   const { content } = useLanguage()
-  const avatarSlotRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     document.title = content.meta.title
@@ -19,20 +18,15 @@ function App() {
   return (
     <>
       <Header />
-      {/* Mounted once so the R3F canvas/WebGL context survives scrolling;
-          docks onto Hero's avatar slot, then into a fixed corner badge. */}
-      <AvatarDock heroSlotRef={avatarSlotRef} />
       <main>
-        <Hero avatarSlotRef={avatarSlotRef} />
+        <Hero />
         <About />
-        <Experience />
+        <Specs />
+        <Work />
         <Contact />
       </main>
-      <footer className="site-footer">
-        <p>
-          &copy; {new Date().getFullYear()} {content.hero.name} &mdash;{' '}
-          {content.footer.rights}
-        </p>
+      <footer className="wrap mono site-footer">
+        <span>{content.footer.copyright}</span>
       </footer>
     </>
   )

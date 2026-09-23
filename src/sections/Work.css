@@ -1,0 +1,111 @@
+.work {
+  padding-block: 14vh;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 40px;
+}
+
+.work .col {
+  grid-column: 2;
+}
+
+.work h2 {
+  font-size: clamp(2.6rem, 6.4vw, 6rem);
+  margin-bottom: 48px;
+}
+
+.jobs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+
+/*
+ * Phase 3 ("Trayectoria") adds an active/inactive opacity split driven by
+ * which job sits nearest the viewport center, plus the avatar following it.
+ * That needs the pose/scroll system and is out of scope here — every job
+ * renders equally visible.
+ */
+.job {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  gap: 8px 24px;
+  padding: 30px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.job .yr {
+  color: var(--muted);
+  padding-top: 0.55em;
+  font-variant-numeric: tabular-nums;
+}
+
+.job h3 {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: var(--display-w);
+  font-variation-settings: var(--display-stretch);
+  font-size: clamp(1.7rem, 3vw, 2.6rem);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.job .role {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 6px 0 10px;
+}
+
+.job p {
+  margin: 0;
+  max-width: 58ch;
+}
+
+.edu {
+  margin-top: 64px;
+  display: grid;
+  gap: 14px;
+}
+
+.edu dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  gap: 12px 24px;
+}
+
+.edu dt {
+  color: var(--muted);
+}
+
+.edu dd {
+  margin: 0;
+}
+
+@media (max-width: 760px) {
+  .work {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .work .col {
+    grid-column: 1;
+  }
+
+  .job {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .job .yr {
+    padding-top: 0;
+  }
+
+  .edu dl {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+
+  .edu dd {
+    margin-bottom: 10px;
+  }
+}

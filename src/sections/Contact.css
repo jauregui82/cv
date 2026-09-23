@@ -1,0 +1,62 @@
+.contact {
+  min-height: 100svh;
+  display: grid;
+  align-content: end;
+  gap: 36px;
+  padding-top: 48vh;
+  padding-bottom: 40px;
+  position: relative;
+}
+
+.contact h2 {
+  font-size: clamp(3.2rem, 11vw, 11rem);
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.contact .rows {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
+}
+
+.contact .rows > div {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+}
+
+.contact .rows .mono {
+  color: var(--muted);
+}
+
+.contact .val {
+  font-size: clamp(1rem, 1.6vw, 1.3rem);
+  word-break: break-word;
+}
+
+.copy {
+  justify-self: start;
+  font: 500 0.72rem/1 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: 0;
+  border-radius: 999px;
+  padding: 0.8em 1.1em;
+  cursor: pointer;
+}
+
+@media (max-width: 760px) {
+  .contact {
+    padding-top: 40vh;
+  }
+
+  .contact .rows {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

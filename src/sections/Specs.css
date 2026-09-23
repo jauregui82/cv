@@ -1,0 +1,80 @@
+/*
+ * Phase 1: ordinary static section. The mockup's sticky 320vh pin, the
+ * per-tramo scroll reveal (p >= i*0.14) and the leader lines to the
+ * avatar's projected 3D anchor points are phase-4 scope ("Stack sticky")
+ * and are intentionally not built here — all 5 groups are simply visible.
+ */
+.specs {
+  padding-block: 14vh;
+  display: grid;
+  gap: 48px;
+}
+
+.specs__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.specs__heading {
+  display: grid;
+  gap: 14px;
+}
+
+.specs h2 {
+  font-size: clamp(2.4rem, 5.6vw, 5.2rem);
+}
+
+.specs__model {
+  color: var(--muted);
+  text-align: right;
+}
+
+.specs__callouts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px 24px;
+}
+
+.specs__callout {
+  display: grid;
+  gap: 4px;
+}
+
+.specs__callout .mono {
+  color: var(--accent);
+}
+
+.specs__callout p {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.35;
+}
+
+.specs__callout.r {
+  text-align: right;
+}
+
+.specs__tail {
+  margin: 0;
+  color: var(--muted);
+  max-width: 52ch;
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
+}
+
+@media (max-width: 760px) {
+  .specs__callouts {
+    gap: 20px 16px;
+  }
+
+  .specs__callout.r {
+    text-align: left;
+  }
+
+  .specs__callout p {
+    font-size: 0.86rem;
+  }
+}

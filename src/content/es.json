@@ -3,102 +3,137 @@
     "title": "Jauregui Crespo CV"
   },
   "nav": {
-    "about": "Conóceme",
-    "work": "Área Profesional",
+    "about": "Sobre mí",
+    "specs": "Stack",
+    "work": "Trayectoria",
     "contact": "Contacto"
   },
+  "header": {
+    "navGroupLabel": "Secciones",
+    "langGroupLabel": "Idioma",
+    "variantGroupLabel": "Variante de diseño",
+    "variantNoche": "Noche",
+    "variantDia": "Día"
+  },
   "hero": {
+    "eyebrow": "Front-End Engineer — Santiago de Chile",
     "name": "Jauregui Crespo",
-    "role": "Front-End Engineer | React • Next.js • TypeScript",
-    "tagline": "Construyendo aplicaciones web escalables y de alto rendimiento"
+    "ledeBefore": "Construyo aplicaciones web escalables con ",
+    "ledeEmphasis": "React, Next.js y TypeScript",
+    "ledeAfter": " — y cuido el detalle hasta el último píxel.",
+    "indicator": "Desliza. Él te acompaña."
   },
   "about": {
-    "title": "Acerca de mí",
+    "kicker": "Sobre mí",
+    "title": "Seis años convirtiendo diseños en producto.",
     "paragraphs": [
-      "Soy Front-End Engineer con más de 6 años de experiencia construyendo aplicaciones web escalables y de alto rendimiento. Nacido en Venezuela y actualmente radicado en Santiago de Chile, me especializo en React, Next.js y TypeScript, con un fuerte enfoque en arquitectura UI, optimización de rendimiento y mantenibilidad del código.",
-      "He tenido la oportunidad de contribuir en proyectos desafiantes tanto en entornos corporativos como startups, incluyendo el desarrollo del ciclo completo de retiro en tienda para Cencosud y proyectos internacionales como SoundExchange, Whitepages y Campomar. Mi experiencia abarca desde la creación de librerías UI internas publicadas en AWS CodeArtifact, hasta la implementación de pipelines CI/CD y la migración de arquitecturas legacy a soluciones modernas con React y Redux, logrando mejoras significativas de rendimiento.",
-      "Más allá del código, me apasiona el aprendizaje continuo y mantenerme actualizado con las últimas tendencias en desarrollo Front-End. Disfruto colaborar con equipos multidisciplinarios bajo metodologías ágiles y contribuir a la creación de productos que generen un impacto real en los usuarios."
+      "Soy Front-End Engineer, nacido en Venezuela y radicado en Santiago de Chile. Me especializo en React, Next.js y TypeScript, con foco en arquitectura UI, rendimiento y código mantenible.",
+      "He construido el ciclo completo de retiro en tienda para Cencosud, trabajado en productos internacionales como SoundExchange, Whitepages y Campomar, creado librerías UI internas publicadas en AWS CodeArtifact y migrado front-ends legacy a React + Redux."
+    ],
+    "stats": [
+      { "label": "años en front-end", "value": "6+" },
+      { "label": "equipos y clientes", "value": "7" },
+      { "label": "países · VE · PE · CL", "value": "3" }
     ]
   },
-  "experience": {
-    "title": "Área Profesional",
-    "educationTitle": "Estudios Realizados",
-    "education": [
-      {
-        "label": "Idiomas: ",
-        "value": "EC English Language Centres - Inglés General (Feb - Jul 2025) - Entrenamiento intensivo enfocado en comunicación profesional"
-      },
-      {
-        "label": "Ingeniería: ",
-        "value": "UPTAMCA \"Universidad Politécnica de Los Altos Mirandinos Cecilio Acosta\" - Ingeniero en Informática (2010 - 2016)"
-      },
-      {
-        "label": "Secundaria: ",
-        "value": "Liceo San José - Bachiller en Administración Mención Procesamiento de Datos (2006)"
-      }
+  "specs": {
+    "kicker": "Ficha técnica",
+    "titleLine1": "Modelo JC‑26.",
+    "titleLine2": "Especificaciones.",
+    "modelLine1": "Front-End · build 2016–2026",
+    "modelLine2": "Peso: 0 kg de código legacy",
+    "groups": [
+      { "label": "Cerebro", "text": "React · Next.js · TypeScript · JavaScript ES6+" },
+      { "label": "Visión", "text": "Arquitectura UI · Accesibilidad · Rendimiento web" },
+      { "label": "Núcleo", "text": "Redux · React Query · Apollo GraphQL" },
+      { "label": "Manos", "text": "Jest · Cypress · Testing Library" },
+      { "label": "Base", "text": "AWS · CI/CD · CodeArtifact · Git" }
     ],
-    "workTitle": "Experiencia Laboral",
+    "tail": "Probado en campo con Scrum, Kanban, Material‑UI, SASS y Bootstrap."
+  },
+  "work": {
+    "kicker": "Trayectoria",
+    "title": "Dónde he construido.",
     "jobs": [
       {
-        "company": "Freelancer:",
-        "meta": "Remoto / Front-End Developer / 2022 - Presente",
-        "description": "Proyectos internacionales con Athenaworks (SoundExchange - plataforma de gestión de regalías musicales, Whitepages - directorio empresarial) y Aurica (broker de metales preciosos líder en Chile). Desarrollo con React, Next.js, TypeScript y arquitecturas escalables."
+        "years": "2023 — Hoy",
+        "company": "LVA Indices",
+        "role": "Frontend Developer · Santiago",
+        "description": "Plataformas financieras con React, Next.js y TypeScript. Librería UI interna y optimización de pipelines CI/CD en AWS."
       },
       {
-        "company": "LVA Indices:",
-        "meta": "Santiago, Chile / Frontend Developer / Nov 2023 - Presente",
-        "description": "Desarrollo de plataformas financieras con React, Next.js y TypeScript. Creación de librería UI interna y optimización de pipelines CI/CD en AWS."
+        "years": "2022 — Hoy",
+        "company": "Freelance",
+        "role": "Front-End Developer · Remoto",
+        "description": "Athenaworks (SoundExchange, Whitepages) y Aurica, broker de metales preciosos líder en Chile."
       },
       {
-        "company": "Cencosud S.A.:",
-        "meta": "Santiago, Chile / Front-End Developer / Ago 2021 - Sep 2023",
-        "description": "Liderazgo del equipo Front-End en múltiples iniciativas e-commerce. Migración de componentes legacy a React + Redux con mejora estimada del 35% en rendimiento."
+        "years": "2021 — 2023",
+        "company": "Cencosud",
+        "role": "Front-End Developer · Santiago",
+        "description": "Lideré el front-end en varias iniciativas e-commerce. Migración de componentes legacy a React + Redux, ~35% más rápido."
       },
       {
-        "company": "ACL:",
-        "meta": "Santiago, Chile / Front-End Developer (Cliente: Cencosud) / Dic 2020 - Ago 2021",
-        "description": "Desarrollo de componentes reutilizables con React y Material-UI. Integración de APIs REST."
+        "years": "2020 — 2021",
+        "company": "ACL",
+        "role": "Front-End Developer · cliente: Cencosud",
+        "description": "Componentes reutilizables con React y Material‑UI, integración de APIs REST."
       },
       {
-        "company": "Cumplo:",
-        "meta": "Santiago, Chile / Front-End Developer / May 2019 - Dic 2020",
-        "description": "Desarrollo y mantenimiento de aplicaciones financieras con React, Redux y Apollo GraphQL. Enfoque en UI responsiva y accesible."
+        "years": "2019 — 2020",
+        "company": "Cumplo",
+        "role": "Front-End Developer · Santiago",
+        "description": "Apps financieras con React, Redux y Apollo GraphQL, con foco en UI responsiva y accesible."
       },
       {
-        "company": "La Agencia®:",
-        "meta": "Lima, Perú / Desarrollador Web / Oct 2018 - Mar 2019",
-        "description": "Construcción de interfaces responsivas usando HTML5, CSS3, JavaScript y Bootstrap."
+        "years": "2018 — 2019",
+        "company": "La Agencia®",
+        "role": "Desarrollador Web · Lima",
+        "description": "Interfaces responsivas con HTML5, CSS3, JavaScript y Bootstrap."
       },
       {
-        "company": "MasterHelp:",
-        "meta": "Lima, Perú / Coordinador de Desarrollo / Sep 2017 - Oct 2018",
-        "description": "Liderazgo en el desarrollo del portal MasterHelp.net. Definición de arquitectura frontend y stack técnico."
+        "years": "2017 — 2018",
+        "company": "MasterHelp",
+        "role": "Coordinador de Desarrollo · Lima",
+        "description": "Lideré el desarrollo de MasterHelp.net y definí su arquitectura front-end."
       }
     ],
-    "previousExperience": {
-      "label": "Experiencia previa:",
-      "value": "M&M Consultores (2017-2018), S&C Sistemas (2016-2017), Soluciones Medianet (2015-2016), Key Systems (2015)"
-    },
-    "skillsTitle": "Tecnologías y Habilidades",
-    "skills": [
-      { "label": "Front-End:", "value": "React, Next.js, TypeScript, JavaScript (ES6+), HTML5, CSS3" },
-      { "label": "UI y Arquitectura:", "value": "Arquitectura de componentes, librerías UI, accesibilidad, rendimiento web" },
-      { "label": "Testing:", "value": "Jest, Cypress, Testing Library" },
-      { "label": "State Management:", "value": "Redux, React Query, Apollo GraphQL" },
-      { "label": "DevOps / Cloud:", "value": "AWS, CI/CD, CodeArtifact" },
-      { "label": "Otros:", "value": "Git, Scrum, Kanban, Material-UI, Bootstrap, SASS" }
+    "educationKicker": "Estudios",
+    "education": [
+      { "term": "2010 — 2016", "description": "Ingeniería en Informática — UPTAMCA, Venezuela" },
+      { "term": "2025", "description": "Inglés general — EC English Language Centres" },
+      { "term": "Antes", "description": "M&M Consultores, S&C Sistemas, Soluciones Medianet, Key Systems" }
     ]
   },
   "contact": {
-    "title": "Contacto",
-    "emailLabel": "Email:",
-    "whatsappLabel": "Whatsapp:",
-    "locationLabel": "Santiago - Chile",
+    "titleLine1": "¿Construimos",
+    "titleLine2": "algo juntos?",
+    "emailLabel": "Email",
     "email": "jauregui.crespo@gmail.com",
-    "whatsappLink": "https://api.whatsapp.com/send?phone=56937393963&text=Hola%2C%20deseo%20adquirir%20un%20servicio%20contigo",
-    "whatsappDisplay": "+56 9 3739 39 63"
+    "copyLabel": "Copiar email",
+    "copiedLabel": "Copiado",
+    "whatsappLabel": "WhatsApp",
+    "whatsappDisplay": "+56 9 3739 39 63",
+    "whatsappLink": "https://api.whatsapp.com/send?phone=56937393963",
+    "locationLabel": "Desde",
+    "locationValue": "Santiago de Chile — abierto a remoto"
+  },
+  "speech": {
+    "lines": [
+      "¡Hola! Soy yo, versión 3D.",
+      "Esta parte la escribí yo.",
+      "Ficha técnica. No mires tanto.",
+      "Vamos por orden.",
+      "¡Escríbeme!"
+    ],
+    "pokes": [
+      "¡Eh, cosquillas!",
+      "Compilando…",
+      "npm run saltar",
+      "Sin tocar el DOM, porfa"
+    ]
   },
   "footer": {
-    "rights": "Todos los derechos reservados."
+    "copyright": "© 2026 Jauregui Crespo"
   }
 }

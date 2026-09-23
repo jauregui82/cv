@@ -4,9 +4,20 @@ export interface LabeledValue {
 }
 
 export interface Job {
+  years: string
   company: string
-  meta: string
+  role: string
   description: string
+}
+
+export interface EducationEntry {
+  term: string
+  description: string
+}
+
+export interface SpecGroup {
+  label: string
+  text: string
 }
 
 export interface Content {
@@ -15,38 +26,65 @@ export interface Content {
   }
   nav: {
     about: string
+    specs: string
     work: string
     contact: string
   }
+  header: {
+    navGroupLabel: string
+    langGroupLabel: string
+    variantGroupLabel: string
+    variantNoche: string
+    variantDia: string
+  }
   hero: {
+    eyebrow: string
     name: string
-    role: string
-    tagline: string
+    ledeBefore: string
+    ledeEmphasis: string
+    ledeAfter: string
+    indicator: string
   }
   about: {
+    kicker: string
     title: string
     paragraphs: string[]
+    stats: LabeledValue[]
   }
-  experience: {
+  specs: {
+    kicker: string
+    titleLine1: string
+    titleLine2: string
+    modelLine1: string
+    modelLine2: string
+    groups: SpecGroup[]
+    tail: string
+  }
+  work: {
+    kicker: string
     title: string
-    educationTitle: string
-    education: LabeledValue[]
-    workTitle: string
     jobs: Job[]
-    previousExperience: LabeledValue
-    skillsTitle: string
-    skills: LabeledValue[]
+    educationKicker: string
+    education: EducationEntry[]
   }
   contact: {
-    title: string
+    titleLine1: string
+    titleLine2: string
     emailLabel: string
-    whatsappLabel: string
-    locationLabel: string
     email: string
-    whatsappLink: string
+    copyLabel: string
+    copiedLabel: string
+    whatsappLabel: string
     whatsappDisplay: string
+    whatsappLink: string
+    locationLabel: string
+    locationValue: string
+  }
+  speech: {
+    lines: string[]
+    pokes: string[]
   }
   footer: {
-    rights: string
+    copyright: string
   }
 }

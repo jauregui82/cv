@@ -1,10 +1,9 @@
 .site-footer {
-  padding: 24px;
-  text-align: center;
-  border-top: 1px solid var(--border-color);
-}
-
-.site-footer p {
-  font-size: 0.85rem;
-  margin: 0;
+  padding-block: 28px 40px;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--line);
 }
