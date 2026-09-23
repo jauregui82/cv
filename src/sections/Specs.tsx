@@ -45,7 +45,17 @@ export function Specs() {
         <div className="specs__callouts">
           {specs.groups.map((group, index) => (
             <div
-              key={group.label}
+              // Stable, position-based key - not `group.label`. The 5 tags
+              // are a fixed, never-reordered list (brief 5.4); their label
+              // is just translated *text*, not their identity. Keying on
+              // the translated label made every tag's DOM node get
+              // unmounted and replaced on each ES/EN toggle (a new key ->
+              // React treats it as a different element), which left
+              // SpecLines.tsx holding refs to now-detached nodes -
+              // getBoundingClientRect() on those returns all zeros, which
+              // is why the leader lines visibly snapped to the top-left
+              // corner right after a language switch.
+              key={index}
               className={`specs__callout ${index % 2 === 0 ? 'l' : 'r'}`}
               style={{ top: `${CALLOUT_TOP_PERCENT[index]}%` }}
             >
