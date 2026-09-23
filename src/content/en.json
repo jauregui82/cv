@@ -12,8 +12,8 @@
     "navGroupLabel": "Sections",
     "langGroupLabel": "Language",
     "variantGroupLabel": "Design variant",
-    "variantNoche": "Noche",
-    "variantDia": "Día"
+    "variantNoche": "Night",
+    "variantDia": "Day"
   },
   "hero": {
     "eyebrow": "Front-End Engineer — Santiago, Chile",
