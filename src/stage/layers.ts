@@ -29,10 +29,17 @@ export const HERO_POSE_DESKTOP: Pose = {
   look: 1,
 }
 
+// Brief table 4.2 literally specifies y:-0.3, h:0.3 here, but at that size/
+// position the avatar overlaps `.hero .lede` (the intro paragraph) on
+// mobile — which brief section 6 explicitly forbids in a fixed pose ("en
+// las poses fijas no debe tapar párrafos"). The mockup itself has the same
+// overlap at this breakpoint, so this is a mockup inconsistency, not
+// something to replicate. Retuned to sit in the gap between the name and
+// the lede instead — see the verification screenshots for the fix.
 export const HERO_POSE_MOBILE: Pose = {
   x: 0,
-  y: -0.3,
-  h: 0.3,
+  y: 0.13,
+  h: 0.21,
   ry: 0,
   rx: 0,
   rz: 0,
