@@ -16,6 +16,7 @@ export const MOBILE_BREAKPOINT = 760
 export const SECTION_IDS = ['hero', 'about', 'specs', 'work', 'contact'] as const
 export type SectionIndex = 0 | 1 | 2 | 3 | 4
 
+export const SPECS_SECTION_INDEX: SectionIndex = 2
 export const WORK_SECTION_INDEX: SectionIndex = 3
 
 export interface Pose {

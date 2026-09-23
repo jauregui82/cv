@@ -1,13 +1,24 @@
 /*
- * Phase 1: ordinary static section. The mockup's sticky 320vh pin, the
- * per-tramo scroll reveal (p >= i*0.14) and the leader lines to the
- * avatar's projected 3D anchor points are phase-4 scope ("Stack sticky")
- * and are intentionally not built here — all 5 groups are simply visible.
+ * Phase 4 ("Stack sticky", brief 5.4): a 320vh scroll budget (`.specs`)
+ * holding a `position: sticky` inner pin (`.specs__pin`) so the section's
+ * content stays fixed on screen while the user scrolls through the budget.
+ * Tag reveal-by-tramo and the leader lines to the avatar's projected 3D
+ * anchor points are driven imperatively by `src/stage/SpecLines.tsx`
+ * (outside this component) — see that file and `Specs.tsx` for why.
  */
 .specs {
-  padding-block: 14vh;
+  position: relative;
+  height: 320vh;
+}
+
+.specs__pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
   display: grid;
-  gap: 48px;
+  grid-template-rows: auto 1fr auto;
+  padding-top: 92px;
+  padding-bottom: 28px;
 }
 
 .specs__head {
@@ -33,14 +44,24 @@
 }
 
 .specs__callouts {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 32px 24px;
+  position: relative;
 }
 
 .specs__callout {
+  position: absolute;
+  width: min(270px, 30vw);
   display: grid;
   gap: 4px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.45s ease,
+    transform 0.45s ease;
+}
+
+.specs__callout.on {
+  opacity: 1;
+  transform: none;
 }
 
 .specs__callout .mono {
@@ -53,7 +74,12 @@
   line-height: 1.35;
 }
 
+.specs__callout.l {
+  left: 0;
+}
+
 .specs__callout.r {
+  right: 0;
   text-align: right;
 }
 
@@ -67,7 +93,16 @@
 
 @media (max-width: 760px) {
   .specs__callouts {
-    gap: 20px 16px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-content: end;
+    gap: 14px 16px;
+    padding-bottom: 8px;
+  }
+
+  .specs__callout {
+    position: static;
+    width: auto;
   }
 
   .specs__callout.r {

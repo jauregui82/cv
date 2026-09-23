@@ -1,12 +1,34 @@
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import type { MutableRefObject } from 'react'
+import { Vector3 } from 'three'
 import type { Group, PerspectiveCamera } from 'three'
 import type { Variant } from '../hooks/useVariant'
 import { INITIAL_DISPLAY_POSE, POSE_KEYS, WORK_SECTION_INDEX } from './choreography'
 import type { Pose } from './choreography'
 import type { ScrollPoseApi } from './useScrollPose'
-import { workTrackingStore } from './store'
+import { specLinesStore, workTrackingStore } from './store'
+
+/**
+ * Model-space anchor points for the Stack section's leader lines (brief 4.5
+ * + 5.4). Order matches `content.specs.groups` in `es.json`/`en.json`
+ * (Cerebro/Visión/Núcleo/Manos/Base) and mockup.html's `ANCHORS` array — the
+ * brief's anchor table doesn't name which tag maps to which point, so this
+ * mapping is ours: Cerebro→brain, Visión→glasses, Núcleo→torso, Manos→hand,
+ * Base→feet.
+ */
+const SPEC_ANCHORS: readonly Vector3[] = [
+  new Vector3(0.12, 0.86, 0.22), // Cerebro
+  new Vector3(0.26, 0.18, 0.47), // Visión
+  new Vector3(-0.05, -0.38, 0.25), // Núcleo
+  new Vector3(0.31, -0.45, 0.12), // Manos
+  new Vector3(-0.17, -0.92, 0.24), // Base
+]
+
+/** Mirrors mockup.html's `cur.specs > .02` gate for computing/showing the
+ * leader lines at all — avoids the per-anchor projection work outside the
+ * Stack section's held+blend range. */
+const SPEC_LINES_VISIBLE_EPSILON = 0.02
 
 /**
  * Visible plane size (world units) at z = 0 for a perspective camera sitting
@@ -126,12 +148,13 @@ export function useAvatarPoseFrame({
   const currentPoseRef = useRef<Pose>({ ...INITIAL_DISPLAY_POSE })
   const jumpProgressRef = useRef(1) // 1 == grounded / no jump in flight
   const lastJumpVersionRef = useRef(workTrackingStore.getSnapshot().jumpVersion)
+  const tmpAnchorRef = useRef(new Vector3())
 
   useFrame((state, delta) => {
     const group = poseGroupRef.current
     if (!group) return
 
-    const { pose: targetPose, dominant } = scrollPose.getTargetPose(reducedMotion)
+    const { pose: targetPose, dominant, p } = scrollPose.getTargetPose(reducedMotion)
 
     const current = currentPoseRef.current
     const k = 1 - Math.exp(-delta * 7)
@@ -188,5 +211,25 @@ export function useAvatarPoseFrame({
     transform.scale = scale
     transform.floorLocal = floorLocal
     transform.jumpHeight = jumpHeight
+
+    // Stack leader lines (brief 5.4 + 4.5): project the 5 model-space
+    // anchors through the avatar's *this-frame* world transform. R3F's
+    // implicit render (which recomputes matrixWorld for the whole scene)
+    // only runs after every useFrame callback has finished, so without this
+    // explicit call `group.matrixWorld` here would still hold last frame's
+    // transform — mirrors mockup.html's own explicit `avatar.updateMatrixWorld()`
+    // right before it projects the same anchors.
+    group.updateMatrixWorld(true)
+
+    if (current.specs > SPEC_LINES_VISIBLE_EPSILON) {
+      const tmp = tmpAnchorRef.current
+      const anchors = SPEC_ANCHORS.map((anchor): [number, number] => {
+        tmp.copy(anchor).applyMatrix4(group.matrixWorld).project(state.camera)
+        return [((tmp.x + 1) / 2) * state.size.width, ((1 - tmp.y) / 2) * state.size.height]
+      })
+      specLinesStore.update(anchors, dominant, p, current.specs)
+    } else {
+      specLinesStore.update(specLinesStore.getSnapshot().anchors, dominant, p, 0)
+    }
   })
 }
