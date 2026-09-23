@@ -22,10 +22,9 @@
 }
 
 /*
- * Phase 3 ("Trayectoria") adds an active/inactive opacity split driven by
- * which job sits nearest the viewport center, plus the avatar following it.
- * That needs the pose/scroll system and is out of scope here — every job
- * renders equally visible.
+ * Active-job opacity split (brief 5.5): the job nearest the viewport center
+ * (tracked in Work.tsx) renders at full opacity with an accent-colored
+ * company name; the rest sit at .38. Matches mockup.html's `.job`/`.job.active`.
  */
 .job {
   display: grid;
@@ -33,6 +32,16 @@
   gap: 8px 24px;
   padding: 30px 0;
   border-bottom: 1px solid var(--line);
+  opacity: 0.38;
+  transition: opacity 0.35s ease;
+}
+
+.job.active {
+  opacity: 1;
+}
+
+.job.active h3 {
+  color: var(--accent);
 }
 
 .job .yr {

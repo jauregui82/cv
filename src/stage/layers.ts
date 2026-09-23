@@ -1,54 +1,12 @@
+import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import type { MutableRefObject } from 'react'
 import type { Group, PerspectiveCamera } from 'three'
 import type { Variant } from '../hooks/useVariant'
-
-/** Matches the `<760px` breakpoint used across `src/sections/*.css`. */
-export const MOBILE_BREAKPOINT = 760
-
-export interface Pose {
-  x: number
-  y: number
-  h: number
-  ry: number
-  rx: number
-  rz: number
-  look: number
-}
-
-// Brief table 4.2, Hero row only — this phase renders the Hero pose
-// statically. Scroll-driven pose choreography for the other sections
-// (choreography.ts / useScrollPose.ts) is Phase 3.
-export const HERO_POSE_DESKTOP: Pose = {
-  x: 0,
-  y: -0.08,
-  h: 0.7,
-  ry: 0,
-  rx: 0,
-  rz: 0,
-  look: 1,
-}
-
-// Brief table 4.2 literally specifies y:-0.3, h:0.3 here, but at that size/
-// position the avatar overlaps `.hero .lede` (the intro paragraph) on
-// mobile — which brief section 6 explicitly forbids in a fixed pose ("en
-// las poses fijas no debe tapar párrafos"). The mockup itself has the same
-// overlap at this breakpoint, so this is a mockup inconsistency, not
-// something to replicate. Retuned to sit in the gap between the name and
-// the lede instead — see the verification screenshots for the fix.
-export const HERO_POSE_MOBILE: Pose = {
-  x: 0,
-  y: 0.13,
-  h: 0.21,
-  ry: 0,
-  rx: 0,
-  rz: 0,
-  look: 1,
-}
-
-export function getHeroPose(isMobile: boolean): Pose {
-  return isMobile ? HERO_POSE_MOBILE : HERO_POSE_DESKTOP
-}
+import { INITIAL_DISPLAY_POSE, POSE_KEYS, WORK_SECTION_INDEX } from './choreography'
+import type { Pose } from './choreography'
+import type { ScrollPoseApi } from './useScrollPose'
+import { workTrackingStore } from './store'
 
 /**
  * Visible plane size (world units) at z = 0 for a perspective camera sitting
@@ -88,7 +46,9 @@ export function breatheFactor(clock: number): number {
  * Cursor-follow, brief 4.3: `ry += look*mx*0.52`, `rx += look*my*0.18`.
  * `pointerX`/`pointerY` are r3f's NDC pointer (-1..1, Y up); mockup.html's
  * `my` is screen-space (Y down), so the Y term is negated here to match the
- * same visual tilt direction.
+ * same visual tilt direction. `look` now varies per section (each pose row
+ * in `choreography.ts` sets its own value) instead of being hardcoded to 1
+ * like Phase 2's Hero-only pose.
  */
 export function cursorRotation(look: number, pointerX: number, pointerY: number) {
   return {
@@ -103,6 +63,15 @@ export function shadowBaseOpacity(variant: Variant): number {
 }
 
 /**
+ * Jump one-shot (brief 4.3 "Salto"): triggered when the Work section's
+ * active job changes (`store.ts`'s `jumpVersion`), 0.55s, `sin(π·t)·0.18`
+ * added to Y plus a small z-axis sway. Mirrors mockup.html's `hop`.
+ */
+const JUMP_DURATION_SECONDS = 0.55
+const JUMP_HEIGHT = 0.18
+const JUMP_Z_SWAY = 0.08
+
+/**
  * Shared DOM/canvas-internal transform handoff so the contact shadow can
  * track the avatar's current world position/scale without forcing a React
  * re-render every frame — brief section 8's "estado compartido ... en un
@@ -114,10 +83,17 @@ export interface AvatarTransform {
   scale: number
   /** Local-space Y of the model's lowest point, after centering. */
   floorLocal: number
+  /**
+   * Current jump height (brief 4.3's raw `sin(π·t)·0.18` term, unscaled by
+   * avatar size) — 0 when grounded. `ContactShadow` (`Stage.tsx`) reads
+   * this to fade out while the avatar is airborne; deliberately excluded
+   * from `y` above so the shadow itself "no sube con los saltos".
+   */
+  jumpHeight: number
 }
 
 export function createAvatarTransform(): AvatarTransform {
-  return { x: 0, y: 0, scale: 0, floorLocal: -0.95 }
+  return { x: 0, y: 0, scale: 0, floorLocal: -0.95, jumpHeight: 0 }
 }
 
 interface PoseFrameOptions {
@@ -126,14 +102,18 @@ interface PoseFrameOptions {
   naturalHeight: number
   floorLocal: number
   reducedMotion: boolean
+  scrollPose: ScrollPoseApi
 }
 
 /**
- * Per-frame Hero-pose placement: screen -> world positioning (brief 4.1)
- * plus the idle float/breathe and cursor-follow layers (brief 4.3), applied
- * to the pose group. Under `prefers-reduced-motion` the avatar sits still
- * at its static hero-pose position (brief section 6). Used by both the real
- * GLB avatar and its sphere+capsule fallback so they behave identically.
+ * Per-frame pose placement: resolves the scroll-driven target pose (brief
+ * 4.2, `useScrollPose`), exponentially damps the displayed pose towards it
+ * (`k = 1 - exp(-dt*7)`), then layers idle float/breathe, cursor-follow and
+ * the jump one-shot on top (brief 4.3), and does the screen -> world
+ * placement (brief 4.1). Under `prefers-reduced-motion` idle/jump/Specs'
+ * scroll-tied rotation are suppressed — only the smooth section-to-section
+ * repositioning remains (brief section 6). Used by both the real GLB avatar
+ * and its sphere+capsule fallback so they behave identically.
  */
 export function useAvatarPoseFrame({
   poseGroupRef,
@@ -141,40 +121,72 @@ export function useAvatarPoseFrame({
   naturalHeight,
   floorLocal,
   reducedMotion,
+  scrollPose,
 }: PoseFrameOptions) {
-  useFrame((state) => {
+  const currentPoseRef = useRef<Pose>({ ...INITIAL_DISPLAY_POSE })
+  const jumpProgressRef = useRef(1) // 1 == grounded / no jump in flight
+  const lastJumpVersionRef = useRef(workTrackingStore.getSnapshot().jumpVersion)
+
+  useFrame((state, delta) => {
     const group = poseGroupRef.current
     if (!group) return
 
-    const isMobile = state.size.width < MOBILE_BREAKPOINT
-    const pose = getHeroPose(isMobile)
+    const { pose: targetPose, dominant } = scrollPose.getTargetPose(reducedMotion)
+
+    const current = currentPoseRef.current
+    const k = 1 - Math.exp(-delta * 7)
+    for (const key of POSE_KEYS) {
+      current[key] += (targetPose[key] - current[key]) * k
+    }
+
+    // Jump trigger: only while the Work section is actually the pose in
+    // play (mirrors mockup.html gating `hop` on `dominant===3`), and never
+    // under reduced motion (brief section 6).
+    const jumpVersion = workTrackingStore.getSnapshot().jumpVersion
+    if (!reducedMotion && dominant === WORK_SECTION_INDEX && jumpVersion !== lastJumpVersionRef.current) {
+      jumpProgressRef.current = 0
+    }
+    lastJumpVersionRef.current = jumpVersion
+
+    if (jumpProgressRef.current < 1) {
+      jumpProgressRef.current = Math.min(1, jumpProgressRef.current + delta / JUMP_DURATION_SECONDS)
+    }
+    const jumpProgress = jumpProgressRef.current
+    const jumpHeight =
+      !reducedMotion && jumpProgress < 1 ? Math.sin(jumpProgress * Math.PI) * JUMP_HEIGHT : 0
+    const jumpRz =
+      !reducedMotion && jumpProgress < 1 ? Math.sin(jumpProgress * Math.PI * 2) * JUMP_Z_SWAY : 0
+
     const { visibleWidth, visibleHeight } = getVisibleSize(
       state.camera as PerspectiveCamera,
       state.size.width,
       state.size.height,
     )
 
-    const worldX = pose.x * (visibleWidth / 2)
-    const baseWorldY = pose.y * (visibleHeight / 2)
-    const scale = (pose.h * visibleHeight) / naturalHeight
+    const worldX = current.x * (visibleWidth / 2)
+    const baseWorldY = current.y * (visibleHeight / 2)
+    const scale = (current.h * visibleHeight) / naturalHeight
 
     const clock = state.clock.elapsedTime
     const bob = reducedMotion ? 0 : idleBob(clock)
     const breathe = reducedMotion ? 1 : breatheFactor(clock)
     const { rx, ry } = reducedMotion
       ? { rx: 0, ry: 0 }
-      : cursorRotation(pose.look, state.pointer.x, state.pointer.y)
+      : cursorRotation(current.look, state.pointer.x, state.pointer.y)
 
-    const worldY = baseWorldY + bob * scale
+    // The jump lifts the mesh but not the shadow's tracked Y (brief 4.3:
+    // shadow "no sube con los saltos") — see `transform.y` below.
+    const worldY = baseWorldY + (bob + jumpHeight) * scale
 
     group.position.set(worldX, worldY, 0)
     group.scale.setScalar(scale * breathe)
-    group.rotation.set(pose.rx + rx, pose.ry + ry, pose.rz)
+    group.rotation.set(current.rx + rx, current.ry + ry, current.rz + jumpRz)
 
     const transform = transformRef.current
     transform.x = worldX
-    transform.y = worldY
+    transform.y = baseWorldY + bob * scale
     transform.scale = scale
     transform.floorLocal = floorLocal
+    transform.jumpHeight = jumpHeight
   })
 }

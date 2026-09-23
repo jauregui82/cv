@@ -6,6 +6,7 @@ import { Box3, Mesh, MeshStandardMaterial, Vector3 } from 'three'
 import type { Group } from 'three'
 import { useAvatarPoseFrame } from './layers'
 import type { AvatarTransform } from './layers'
+import { useScrollPose } from './useScrollPose'
 import type { Variant } from '../hooks/useVariant'
 
 const MODEL_PATH = '/models/avatar.glb'
@@ -99,6 +100,7 @@ function AvatarModel({ variant, transformRef }: AvatarProps) {
   const poseGroupRef = useRef<Group>(null)
   const reducedMotion = useReducedMotion()
   const material = useVariantMaterial(variant)
+  const scrollPose = useScrollPose()
 
   // avatar.glb carries POSITION only (no normals/UVs/materials/skeleton, per
   // glTF inspection) — normals must be computed after load or lighting is
@@ -132,13 +134,17 @@ function AvatarModel({ variant, transformRef }: AvatarProps) {
     naturalHeight,
     floorLocal,
     reducedMotion: Boolean(reducedMotion),
+    scrollPose,
   })
 
   return (
     <group ref={poseGroupRef}>
-      {/* Spin group: reserved for the full-turn jump/poke/flip animations
-          of Phase 3+ (brief 4.3's "los giros extra van en un grupo hijo
-          (spin)"). Identity this phase — nothing rotates it yet. */}
+      {/* Spin group: reserved for the full-turn poke/flip animations of
+          Phase 5 (brief 4.3's "los giros extra van en un grupo hijo
+          (spin)"). The jump one-shot (brief 4.3 "Salto", built this phase)
+          applies directly to the pose group above instead, matching
+          mockup.html (its `hop` term lives on `avatar.rotation`/position,
+          not `spin`). Identity here — nothing rotates this group yet. */}
       <group>
         <primitive object={scene} />
       </group>
@@ -150,6 +156,7 @@ function AvatarFallback({ variant, transformRef }: AvatarProps) {
   const poseGroupRef = useRef<Group>(null)
   const reducedMotion = useReducedMotion()
   const material = useVariantMaterial(variant)
+  const scrollPose = useScrollPose()
 
   useAvatarPoseFrame({
     poseGroupRef,
@@ -157,6 +164,7 @@ function AvatarFallback({ variant, transformRef }: AvatarProps) {
     naturalHeight: FALLBACK_NATURAL_HEIGHT,
     floorLocal: FALLBACK_FLOOR_LOCAL,
     reducedMotion: Boolean(reducedMotion),
+    scrollPose,
   })
 
   return (

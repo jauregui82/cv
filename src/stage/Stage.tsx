@@ -109,9 +109,11 @@ interface ContactShadowProps {
 
 /**
  * Static contact shadow under the avatar's feet (brief 4.3). Reads the
- * avatar's current world transform from `transformRef` each frame — the
- * "fades while airborne" jump behavior is Phase 3+, since there's no jump
- * yet, so this phase only tracks x/y/scale.
+ * avatar's current world transform from `transformRef` each frame. `x`/`y`
+ * there deliberately exclude the jump offset (see `layers.ts`), so the
+ * shadow "no sube con los saltos"; `jumpHeight` drives its opacity fading
+ * out while airborne, mirroring mockup.html's
+ * `opacity * (1 - min(.7, jump*1.4))`.
  */
 function ContactShadow({ variant, transformRef }: ContactShadowProps) {
   const meshRef = useRef<Mesh>(null)
@@ -125,7 +127,8 @@ function ContactShadow({ variant, transformRef }: ContactShadowProps) {
 
     mesh.position.set(transform.x, feetY, -0.2)
     mesh.scale.set(transform.scale * 1.25, transform.scale * 0.5, 1)
-    ;(mesh.material as MeshBasicMaterial).opacity = shadowBaseOpacity(variant)
+    const airborneFade = 1 - Math.min(0.7, transform.jumpHeight * 1.4)
+    ;(mesh.material as MeshBasicMaterial).opacity = shadowBaseOpacity(variant) * airborneFade
   })
 
   return (
