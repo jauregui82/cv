@@ -61,8 +61,15 @@ export function SpecLines() {
   useEffect(() => {
     let frameId = requestAnimationFrame(loop)
 
-    function clearPath(index: number) {
+    // Hides both the leader line AND its endpoint circle. The circle was
+    // previously left untouched here - it kept whatever cx/cy/opacity it
+    // last had from inside the Stack section, so it rendered as a stray dot
+    // frozen over later sections (e.g. Contact) once scrolled away. Only
+    // the path was ever cleared, since a circle's `opacity="0"` and a
+    // path's `d=""` both fully hide the element, but a circle has no `d`.
+    function clearMark(index: number) {
       pathRefs.current[index]?.setAttribute('d', '')
+      circleRefs.current[index]?.setAttribute('opacity', '0')
     }
 
     function loop() {
@@ -75,7 +82,7 @@ export function SpecLines() {
       if (snapshot.opacity <= 0) {
         for (let i = 0; i < callouts.length; i++) {
           callouts[i].el.classList.remove('on')
-          clearPath(i)
+          clearMark(i)
         }
         return
       }
@@ -90,7 +97,7 @@ export function SpecLines() {
         const circle = circleRefs.current[i]
         const anchor = snapshot.anchors[i]
         if (!on || !path || !circle || !anchor) {
-          clearPath(i)
+          clearMark(i)
           continue
         }
 
