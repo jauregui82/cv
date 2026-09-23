@@ -1,0 +1,104 @@
+{
+  "meta": {
+    "title": "Jauregui Crespo CV"
+  },
+  "nav": {
+    "about": "About Me",
+    "work": "Professional Area",
+    "contact": "Contact"
+  },
+  "hero": {
+    "name": "Jauregui Crespo",
+    "role": "Front-End Engineer | React • Next.js • TypeScript",
+    "tagline": "Building scalable and high-performance web applications"
+  },
+  "about": {
+    "title": "About Me",
+    "paragraphs": [
+      "I'm a Front-End Engineer with over 6 years of experience building scalable and high-performance web applications. Born in Venezuela and currently based in Santiago, Chile, I specialize in React, Next.js, and TypeScript, with a strong focus on UI architecture, performance optimization, and code maintainability.",
+      "I've had the opportunity to contribute to challenging projects in both corporate and startup environments, including the development of the complete in-store pickup cycle for Cencosud and international projects like SoundExchange, Whitepages, and Campomar. My experience ranges from creating internal UI libraries published to AWS CodeArtifact, to implementing CI/CD pipelines and migrating legacy architectures to modern solutions with React and Redux, achieving significant performance improvements.",
+      "Beyond code, I'm passionate about continuous learning and staying current with the latest trends in Front-End development. I enjoy collaborating with cross-functional teams under agile methodologies and contributing to products that create real impact for users."
+    ]
+  },
+  "experience": {
+    "title": "Professional Area",
+    "educationTitle": "Education",
+    "education": [
+      {
+        "label": "Languages: ",
+        "value": "EC English Language Centres - General English (Feb - Jul 2025) - Intensive training focused on professional communication"
+      },
+      {
+        "label": "Engineering: ",
+        "value": "UPTAMCA \"Universidad Politécnica de Los Altos Mirandinos Cecilio Acosta\" - Computer Engineer (2010 - 2016)"
+      },
+      {
+        "label": "High School: ",
+        "value": "Liceo San José - Bachelor in Administration, Data Processing (2006)"
+      }
+    ],
+    "workTitle": "Work Experience",
+    "jobs": [
+      {
+        "company": "Freelancer:",
+        "meta": "Remote / Front-End Developer / 2022 - Present",
+        "description": "International projects with Athenaworks (SoundExchange - music royalty management platform, Whitepages - business directory) and Aurica (leading precious metals broker in Chile). Development with React, Next.js, TypeScript and scalable architectures."
+      },
+      {
+        "company": "LVA Indices:",
+        "meta": "Santiago, Chile / Frontend Developer / Nov 2023 - Present",
+        "description": "Financial platform development with React, Next.js and TypeScript. Internal UI library creation and CI/CD pipeline optimization in AWS."
+      },
+      {
+        "company": "Cencosud S.A.:",
+        "meta": "Santiago, Chile / Front-End Developer / Aug 2021 - Sep 2023",
+        "description": "Front-End team leadership across multiple e-commerce initiatives. Legacy components migration to React + Redux with an estimated 35% performance improvement."
+      },
+      {
+        "company": "ACL:",
+        "meta": "Santiago, Chile / Front-End Developer (Client: Cencosud) / Dec 2020 - Aug 2021",
+        "description": "Reusable component development with React and Material-UI. REST API integration."
+      },
+      {
+        "company": "Cumplo:",
+        "meta": "Santiago, Chile / Front-End Developer / May 2019 - Dec 2020",
+        "description": "Financial application development and maintenance with React, Redux and Apollo GraphQL. Focus on responsive and accessible UI."
+      },
+      {
+        "company": "La Agencia®:",
+        "meta": "Lima, Peru / Web Developer / Oct 2018 - Mar 2019",
+        "description": "Responsive interface development using HTML5, CSS3, JavaScript and Bootstrap."
+      },
+      {
+        "company": "MasterHelp:",
+        "meta": "Lima, Peru / Development Coordinator / Sep 2017 - Oct 2018",
+        "description": "Led the development of MasterHelp.net portal. Frontend architecture and technical stack definition."
+      }
+    ],
+    "previousExperience": {
+      "label": "Previous experience:",
+      "value": "M&M Consultores (2017-2018), S&C Sistemas (2016-2017), Soluciones Medianet (2015-2016), Key Systems (2015)"
+    },
+    "skillsTitle": "Technologies & Skills",
+    "skills": [
+      { "label": "Front-End:", "value": "React, Next.js, TypeScript, JavaScript (ES6+), HTML5, CSS3" },
+      { "label": "UI & Architecture:", "value": "Component architecture, UI libraries, accessibility, web performance" },
+      { "label": "Testing:", "value": "Jest, Cypress, Testing Library" },
+      { "label": "State Management:", "value": "Redux, React Query, Apollo GraphQL" },
+      { "label": "DevOps / Cloud:", "value": "AWS, CI/CD, CodeArtifact" },
+      { "label": "Other:", "value": "Git, Scrum, Kanban, Material-UI, Bootstrap, SASS" }
+    ]
+  },
+  "contact": {
+    "title": "Contact",
+    "emailLabel": "Email:",
+    "whatsappLabel": "Whatsapp:",
+    "locationLabel": "Santiago - Chile",
+    "email": "jauregui.crespo@gmail.com",
+    "whatsappLink": "https://api.whatsapp.com/send?phone=56937393963&text=Hola%2C%20deseo%20adquirir%20un%20servicio%20contigo",
+    "whatsappDisplay": "+56 9 3739 39 63"
+  },
+  "footer": {
+    "rights": "All rights reserved."
+  }
+}
