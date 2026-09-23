@@ -1,8 +1,13 @@
 import { motion, useReducedMotion } from 'motion/react'
+import type { RefObject } from 'react'
 import { useLanguage } from '../../hooks/useLanguage'
 import './Hero.css'
 
-export function Hero() {
+interface HeroProps {
+  avatarSlotRef: RefObject<HTMLDivElement | null>
+}
+
+export function Hero({ avatarSlotRef }: HeroProps) {
   const { content } = useLanguage()
   const reduceMotion = useReducedMotion() ?? false
 
@@ -20,7 +25,11 @@ export function Hero() {
           <p className="hero__tagline">{content.hero.tagline}</p>
         </motion.div>
 
-        <div className="hero__avatar" />
+        <div className="hero__avatar">
+          {/* Invisible spacer: reserves the layout rect the always-mounted
+              AvatarDock (see App.tsx) docks onto while Hero is in view. */}
+          <div className="hero__avatar-slot" ref={avatarSlotRef} />
+        </div>
       </div>
     </section>
   )
