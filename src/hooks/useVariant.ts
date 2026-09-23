@@ -3,6 +3,12 @@ import { useCallback, useEffect, useState } from 'react'
 export type Variant = 'noche' | 'dia'
 
 const STORAGE_KEY = 'jau-v'
+// `useVariant` is called independently by every component that needs the
+// variant (Header, Stage, ...) — each gets its own `useState`, so toggling
+// in one doesn't re-render the others on its own. Broadcast changes on this
+// event so every mounted instance stays in sync without lifting state into
+// a context.
+const VARIANT_EVENT = 'jau-variant-change'
 
 function readStoredVariant(): Variant | null {
   try {
@@ -40,6 +46,15 @@ export function useVariant() {
     document.documentElement.dataset.v = variant
   }, [variant])
 
+  useEffect(() => {
+    function onVariantChange(event: Event) {
+      const next = (event as CustomEvent<Variant>).detail
+      if (next === 'noche' || next === 'dia') setVariantState(next)
+    }
+    window.addEventListener(VARIANT_EVENT, onVariantChange)
+    return () => window.removeEventListener(VARIANT_EVENT, onVariantChange)
+  }, [])
+
   const setVariant = useCallback((next: Variant) => {
     setVariantState(next)
     try {
@@ -48,6 +63,7 @@ export function useVariant() {
       // localStorage unavailable (private mode, etc.) — variant still works
       // for this session, it just won't persist.
     }
+    window.dispatchEvent(new CustomEvent<Variant>(VARIANT_EVENT, { detail: next }))
   }, [])
 
   return { variant, setVariant }
