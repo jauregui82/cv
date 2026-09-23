@@ -1,5 +1,10 @@
-.app-shell {
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
+.site-footer {
+  padding: 24px;
+  text-align: center;
+  border-top: 1px solid var(--border-color);
+}
+
+.site-footer p {
+  font-size: 0.85rem;
+  margin: 0;
 }
