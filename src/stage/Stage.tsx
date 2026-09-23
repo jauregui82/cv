@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import type { MutableRefObject } from 'react'
+import { Component, useEffect, useMemo, useRef, useState } from 'react'
+import type { MutableRefObject, ReactNode } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { CanvasTexture } from 'three'
 import type { Mesh, MeshBasicMaterial } from 'three'
@@ -139,6 +139,49 @@ function ContactShadow({ variant, transformRef }: ContactShadowProps) {
   )
 }
 
+interface CanvasErrorBoundaryProps {
+  children: ReactNode
+}
+
+interface CanvasErrorBoundaryState {
+  hasError: boolean
+}
+
+/**
+ * Brief section 6: "el canvas es una mejora, no un requisito" — the page
+ * must stay fully readable/functional with WebGL unavailable entirely (old
+ * browser, disabled GPU…), not just when the GLB itself fails to load
+ * (`AvatarErrorBoundary` in `Avatar.tsx` handles that narrower case, but it
+ * only wraps the model-loading `Suspense`, nested *inside* this `<Canvas>`).
+ *
+ * When the browser can't construct a `WebGLRenderer`, r3f's `<Canvas>`
+ * doesn't throw synchronously: its internal `root.current.configure(...)`
+ * call is a promise, rejection is routed through `.catch(setError)` into
+ * React state, and `<Canvas>` then re-renders and throws that state
+ * synchronously during render (confirmed by reading
+ * `@react-three/fiber`'s `CanvasImpl` — `if (error) throw error`). That
+ * throw happens above `AvatarErrorBoundary`, so without a boundary here it
+ * propagates uncaught and React unmounts the *entire* app, taking the
+ * header/sections/nav down with it. This boundary catches it at the
+ * `<Canvas>` root and renders nothing in its place — the rest of the page
+ * (mounted as siblings in `App.tsx`, outside `.stage`) is unaffected.
+ */
+class CanvasErrorBoundary extends Component<CanvasErrorBoundaryProps, CanvasErrorBoundaryState> {
+  state: CanvasErrorBoundaryState = { hasError: false }
+
+  static getDerivedStateFromError() {
+    return { hasError: true }
+  }
+
+  componentDidCatch(error: unknown) {
+    console.error('[stage] WebGL unavailable, rendering the page without the 3D avatar', error)
+  }
+
+  render() {
+    return this.state.hasError ? null : this.props.children
+  }
+}
+
 /**
  * The single fixed full-screen Canvas (brief 4.1), mounted once in App. Sits
  * above page content (z-index 1) and below the Header (z-index 10) — see
@@ -152,16 +195,18 @@ export function Stage() {
 
   return (
     <div className="stage" aria-hidden="true">
-      <Canvas
-        dpr={[1, 2]}
-        gl={{ alpha: true, antialias: true }}
-        camera={{ fov: 30, position: [0, 0, 10], near: 0.1, far: 100 }}
-        frameloop={tabVisible ? 'always' : 'never'}
-      >
-        <Lights variant={variant} />
-        <ContactShadow variant={variant} transformRef={transformRef} />
-        <Avatar variant={variant} transformRef={transformRef} />
-      </Canvas>
+      <CanvasErrorBoundary>
+        <Canvas
+          dpr={[1, 2]}
+          gl={{ alpha: true, antialias: true }}
+          camera={{ fov: 30, position: [0, 0, 10], near: 0.1, far: 100 }}
+          frameloop={tabVisible ? 'always' : 'never'}
+        >
+          <Lights variant={variant} />
+          <ContactShadow variant={variant} transformRef={transformRef} />
+          <Avatar variant={variant} transformRef={transformRef} />
+        </Canvas>
+      </CanvasErrorBoundary>
     </div>
   )
 }
