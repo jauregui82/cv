@@ -1,0 +1,16 @@
+/*
+ * Fixed full-screen canvas wrapper — brief 4.1. Sits above page content
+ * (z-index 1, e.g. .hero__copy) and below the Header (z-index 10, see
+ * src/components/Header/Header.css). Order relative to the Noche film-grain
+ * overlay (z-index 20, decorative, pointer-events: none) doesn't matter.
+ */
+.stage {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.stage canvas {
+  display: block;
+}

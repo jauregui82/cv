@@ -5,6 +5,7 @@ import { About } from './sections/About'
 import { Specs } from './sections/Specs'
 import { Work } from './sections/Work'
 import { Contact } from './sections/Contact'
+import { Stage } from './stage/Stage'
 import { useLanguage } from './hooks/useLanguage'
 import './App.css'
 
@@ -18,6 +19,9 @@ function App() {
   return (
     <>
       <Header />
+      {/* Mounted once, independent of document flow — Stage owns its own
+          fixed positioning (brief 4.1). */}
+      <Stage />
       <main>
         <Hero />
         <About />
