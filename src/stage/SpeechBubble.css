@@ -1,0 +1,31 @@
+/*
+ * Speech bubble overlay (brief 4.4). Sits above the Stack leader lines
+ * (z-index 6, see SpecLines.css) so it's always readable over the avatar,
+ * and below the header (z-index 10, see Header.css) — matches
+ * mockup.html's `.bubble{z-index:8}`. Position (`left`/`top`) is set
+ * imperatively by SpeechBubble.tsx's own rAF loop, not here.
+ */
+.speech-bubble {
+  position: fixed;
+  z-index: 8;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  background: var(--ink);
+  color: var(--bg);
+  font: 500 0.9rem/1.25 var(--body);
+  padding: 0.55em 0.85em;
+  border-radius: 14px 14px 14px 3px;
+  white-space: nowrap;
+  transform: translate(-10%, -100%) scale(0.6);
+  opacity: 0;
+  transform-origin: 0 100%;
+  transition:
+    opacity 0.2s ease,
+    transform 0.25s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+.speech-bubble.on {
+  opacity: 1;
+  transform: translate(-10%, -100%) scale(1);
+}

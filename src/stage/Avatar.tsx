@@ -1,12 +1,14 @@
 import { Component, Suspense, useEffect, useMemo, useRef } from 'react'
 import type { MutableRefObject, ReactNode } from 'react'
 import { useGLTF } from '@react-three/drei'
+import { useThree } from '@react-three/fiber'
 import { useReducedMotion } from 'motion/react'
-import { Box3, Mesh, MeshStandardMaterial, Vector3 } from 'three'
+import { Box3, Mesh, MeshStandardMaterial, Raycaster, Vector2, Vector3 } from 'three'
 import type { Group } from 'three'
 import { useAvatarPoseFrame } from './layers'
 import type { AvatarTransform } from './layers'
 import { useScrollPose } from './useScrollPose'
+import { avatarActionStore } from './store'
 import type { Variant } from '../hooks/useVariant'
 
 const MODEL_PATH = '/models/avatar.glb'
@@ -27,6 +29,13 @@ const FALLBACK_FLOOR_LOCAL = -0.94
 interface AvatarProps {
   variant: Variant
   transformRef: MutableRefObject<AvatarTransform>
+}
+
+interface AvatarBodyProps extends AvatarProps {
+  /** Lifted to `Avatar` so `AvatarTapListener` can raycast against whichever
+   * of `AvatarModel`/`AvatarFallback` is actually mounted (brief 4.3
+   * "Toque"). */
+  poseGroupRef: MutableRefObject<Group | null>
 }
 
 interface AvatarErrorBoundaryProps {
@@ -66,15 +75,70 @@ class AvatarErrorBoundary extends Component<
 }
 
 export function Avatar({ variant, transformRef }: AvatarProps) {
+  // Outer pose group, shared between whichever of AvatarModel/AvatarFallback
+  // is mounted and AvatarTapListener below — the tap reaction (brief 4.3
+  // "Toque") needs to raycast against it regardless of which one is active.
+  const poseGroupRef = useRef<Group>(null)
+
   return (
-    <AvatarErrorBoundary
-      fallback={<AvatarFallback variant={variant} transformRef={transformRef} />}
-    >
-      <Suspense fallback={null}>
-        <AvatarModel variant={variant} transformRef={transformRef} />
-      </Suspense>
-    </AvatarErrorBoundary>
+    <>
+      <AvatarErrorBoundary
+        fallback={
+          <AvatarFallback
+            variant={variant}
+            transformRef={transformRef}
+            poseGroupRef={poseGroupRef}
+          />
+        }
+      >
+        <Suspense fallback={null}>
+          <AvatarModel variant={variant} transformRef={transformRef} poseGroupRef={poseGroupRef} />
+        </Suspense>
+      </AvatarErrorBoundary>
+      <AvatarTapListener poseGroupRef={poseGroupRef} />
+    </>
   )
+}
+
+interface AvatarTapListenerProps {
+  poseGroupRef: MutableRefObject<Group | null>
+}
+
+/**
+ * Manual raycast click detector for the avatar (brief 4.3 "Toque"). The
+ * Stage wrapper is deliberately `pointer-events: none` (Stage.css) so the
+ * fixed full-screen canvas never blocks clicks on page content beneath it —
+ * which also means r3f's own per-mesh `onClick` can't fire, since it relies
+ * on native pointer events actually reaching the canvas DOM element.
+ * Instead this listens on `window` and manually raycasts against
+ * `poseGroupRef`'s subtree on every click; it never calls
+ * `preventDefault`/`stopPropagation`, so it's purely observational and
+ * click-through to underlying page content keeps working everywhere.
+ */
+function AvatarTapListener({ poseGroupRef }: AvatarTapListenerProps) {
+  const { camera, size } = useThree()
+
+  useEffect(() => {
+    const raycaster = new Raycaster()
+    const ndc = new Vector2()
+
+    function onClick(event: MouseEvent) {
+      const group = poseGroupRef.current
+      if (!group) return
+
+      ndc.x = (event.clientX / size.width) * 2 - 1
+      ndc.y = -(event.clientY / size.height) * 2 + 1
+      raycaster.setFromCamera(ndc, camera)
+      if (raycaster.intersectObject(group, true).length > 0) {
+        avatarActionStore.triggerPoke()
+      }
+    }
+
+    window.addEventListener('click', onClick)
+    return () => window.removeEventListener('click', onClick)
+  }, [camera, size, poseGroupRef])
+
+  return null
 }
 
 function useVariantMaterial(variant: Variant) {
@@ -95,9 +159,9 @@ function useVariantMaterial(variant: Variant) {
   return material
 }
 
-function AvatarModel({ variant, transformRef }: AvatarProps) {
+function AvatarModel({ variant, transformRef, poseGroupRef }: AvatarBodyProps) {
   const { scene } = useGLTF(MODEL_PATH)
-  const poseGroupRef = useRef<Group>(null)
+  const spinGroupRef = useRef<Group>(null)
   const reducedMotion = useReducedMotion()
   const material = useVariantMaterial(variant)
   const scrollPose = useScrollPose()
@@ -130,6 +194,7 @@ function AvatarModel({ variant, transformRef }: AvatarProps) {
 
   useAvatarPoseFrame({
     poseGroupRef,
+    spinGroupRef,
     transformRef,
     naturalHeight,
     floorLocal,
@@ -139,27 +204,27 @@ function AvatarModel({ variant, transformRef }: AvatarProps) {
 
   return (
     <group ref={poseGroupRef}>
-      {/* Spin group: reserved for the full-turn poke/flip animations of
-          Phase 5 (brief 4.3's "los giros extra van en un grupo hijo
-          (spin)"). The jump one-shot (brief 4.3 "Salto", built this phase)
-          applies directly to the pose group above instead, matching
-          mockup.html (its `hop` term lives on `avatar.rotation`/position,
-          not `spin`). Identity here — nothing rotates this group yet. */}
-      <group>
+      {/* Spin group (brief 4.3's "los giros extra van en un grupo hijo
+          (spin)"): carries the tap/flip full-turn one-shots (Phase 5,
+          `layers.ts`). The jump one-shot ("Salto", built Phase 4) applies
+          directly to the pose group above instead, matching mockup.html
+          (its `hop` term lives on `avatar.rotation`/position, not `spin`). */}
+      <group ref={spinGroupRef}>
         <primitive object={scene} />
       </group>
     </group>
   )
 }
 
-function AvatarFallback({ variant, transformRef }: AvatarProps) {
-  const poseGroupRef = useRef<Group>(null)
+function AvatarFallback({ variant, transformRef, poseGroupRef }: AvatarBodyProps) {
+  const spinGroupRef = useRef<Group>(null)
   const reducedMotion = useReducedMotion()
   const material = useVariantMaterial(variant)
   const scrollPose = useScrollPose()
 
   useAvatarPoseFrame({
     poseGroupRef,
+    spinGroupRef,
     transformRef,
     naturalHeight: FALLBACK_NATURAL_HEIGHT,
     floorLocal: FALLBACK_FLOOR_LOCAL,
@@ -169,7 +234,7 @@ function AvatarFallback({ variant, transformRef }: AvatarProps) {
 
   return (
     <group ref={poseGroupRef}>
-      <group>
+      <group ref={spinGroupRef}>
         <mesh position={[0, 0.38, 0]} scale={[1, 0.9, 0.95]} material={material}>
           <sphereGeometry args={[0.5, 48, 32]} />
         </mesh>

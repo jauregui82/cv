@@ -96,3 +96,82 @@ export const specLinesStore = {
     specLinesSnapshot.opacity = opacity
   },
 }
+
+/**
+ * DOM -> canvas one-shot triggers for the two "spin"-group animations
+ * (brief 4.3 "Toque"/"Voltereta"): `AvatarTapListener` (`Avatar.tsx`) bumps
+ * `pokeVersion` on a hit-confirmed click, and the Header's ES/EN toggle
+ * bumps `flipVersion` before delaying the actual language swap by 450ms.
+ * `layers.ts` polls `getSnapshot()` once per frame and diffs each version
+ * against the value it last saw — same "fire once per transition" pattern
+ * as `workTrackingStore.jumpVersion` above. Poke and flip are independent
+ * counters (not a single "busy" flag): the mockup's own `poke`/`flip`
+ * progress vars drive different `spin` rotation axes (Y vs X) and are never
+ * checked against each other, so both can be in flight at once, and
+ * re-triggering either one just restarts that one's progress from 0 —
+ * mirrored exactly here, see `layers.ts`.
+ */
+export interface AvatarActionSnapshot {
+  pokeVersion: number
+  flipVersion: number
+}
+
+const avatarActionSnapshot: AvatarActionSnapshot = {
+  pokeVersion: 0,
+  flipVersion: 0,
+}
+
+export const avatarActionStore = {
+  getSnapshot(): Readonly<AvatarActionSnapshot> {
+    return avatarActionSnapshot
+  },
+
+  triggerPoke() {
+    avatarActionSnapshot.pokeVersion += 1
+  },
+
+  triggerFlip() {
+    avatarActionSnapshot.flipVersion += 1
+  },
+}
+
+/**
+ * Canvas -> DOM bridge for the speech bubble (`SpeechBubble.tsx`, brief
+ * 4.4). `layers.ts` writes `headAnchor` every frame — the model-space head
+ * point `(0.1, 0.98, 0)` (distinct from `SPEC_ANCHORS`'s Cerebro point)
+ * projected through the avatar's live world transform + camera, same
+ * technique as `specLinesStore`'s anchors above. `sectionChangeVersion`
+ * increments whenever `dominant` changes, the "entered a new section"
+ * signal the bubble auto-triggers on — same fire-once-per-transition shape
+ * as `jumpVersion`, except (unlike `jumpVersion`) the very first value counts
+ * as a transition too, so Hero's own line greets on initial mount, matching
+ * mockup.html's load-time greet.
+ */
+export interface AvatarHeadSnapshot {
+  headAnchor: [number, number] | null
+  dominant: SectionIndex
+  sectionChangeVersion: number
+}
+
+const avatarHeadSnapshot: AvatarHeadSnapshot = {
+  headAnchor: null,
+  dominant: 0,
+  sectionChangeVersion: 0,
+}
+
+let lastKnownDominant: SectionIndex | null = null
+
+export const avatarHeadStore = {
+  getSnapshot(): Readonly<AvatarHeadSnapshot> {
+    return avatarHeadSnapshot
+  },
+
+  update(headAnchor: [number, number] | null, dominant: SectionIndex) {
+    if (lastKnownDominant === null || dominant !== lastKnownDominant) {
+      avatarHeadSnapshot.sectionChangeVersion += 1
+    }
+    lastKnownDominant = dominant
+    avatarHeadSnapshot.dominant = dominant
+    avatarHeadSnapshot.headAnchor = headAnchor
+  },
+}

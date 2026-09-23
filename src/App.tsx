@@ -7,6 +7,7 @@ import { Work } from './sections/Work'
 import { Contact } from './sections/Contact'
 import { Stage } from './stage/Stage'
 import { SpecLines } from './stage/SpecLines'
+import { SpeechBubble } from './stage/SpeechBubble'
 import { useLanguage } from './hooks/useLanguage'
 import './App.css'
 
@@ -27,6 +28,10 @@ function App() {
           sibling to Stage rather than nested in Specs, since it draws over
           the whole viewport just like Stage's canvas. */}
       <SpecLines />
+      {/* Speech bubble (brief 4.4) — same rationale as SpecLines above: a
+          fixed overlay over the whole viewport, not nested in any one
+          section. */}
+      <SpeechBubble />
       <main>
         <Hero />
         <About />

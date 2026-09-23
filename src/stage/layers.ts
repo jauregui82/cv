@@ -4,10 +4,15 @@ import type { MutableRefObject } from 'react'
 import { Vector3 } from 'three'
 import type { Group, PerspectiveCamera } from 'three'
 import type { Variant } from '../hooks/useVariant'
-import { INITIAL_DISPLAY_POSE, POSE_KEYS, WORK_SECTION_INDEX } from './choreography'
+import {
+  INITIAL_DISPLAY_POSE,
+  POSE_KEYS,
+  WORK_SECTION_INDEX,
+  easeInOutCubic,
+} from './choreography'
 import type { Pose } from './choreography'
 import type { ScrollPoseApi } from './useScrollPose'
-import { specLinesStore, workTrackingStore } from './store'
+import { avatarActionStore, avatarHeadStore, specLinesStore, workTrackingStore } from './store'
 
 /**
  * Model-space anchor points for the Stack section's leader lines (brief 4.5
@@ -29,6 +34,14 @@ const SPEC_ANCHORS: readonly Vector3[] = [
  * leader lines at all — avoids the per-anchor projection work outside the
  * Stack section's held+blend range. */
 const SPEC_LINES_VISIBLE_EPSILON = 0.02
+
+/**
+ * Model-space anchor for the speech bubble (brief 4.4): the point the
+ * bubble is projected from every frame. Deliberately distinct from
+ * `SPEC_ANCHORS`'s Cerebro point (0.12, 0.86, 0.22) used for the Stack
+ * section's leader lines — see `avatarHeadStore` (`store.ts`).
+ */
+const HEAD_ANCHOR = new Vector3(0.1, 0.98, 0)
 
 /**
  * Visible plane size (world units) at z = 0 for a perspective camera sitting
@@ -94,6 +107,38 @@ const JUMP_HEIGHT = 0.18
 const JUMP_Z_SWAY = 0.08
 
 /**
+ * Tap one-shot (brief 4.3 "Toque"): 0.9s total, a bigger jump (`0.35`) than
+ * the Work-section one above, plus a full Y-axis turn on the `spin` child
+ * group (below) and a speech bubble (`SpeechBubble.tsx`). Reuses `jumpOffset`
+ * rather than duplicating the sine-arc math — brief's own suggestion.
+ */
+const POKE_DURATION_SECONDS = 0.9
+const POKE_JUMP_HEIGHT = 0.35
+
+/**
+ * Flip one-shot (brief 4.3 "Voltereta"): 1s, a full *backward* X-axis turn
+ * on the `spin` child group, triggered by the Header's ES/EN toggle
+ * (`Header.tsx`), which separately delays the actual `setLanguage` call by
+ * 450ms so the text swaps at the flip's midpoint.
+ */
+const FLIP_DURATION_SECONDS = 1
+
+/** Greeting wave (brief 4.3 "Saludo"): `rz += wave * sin(t*5) * 0.16`. */
+const WAVE_FREQUENCY = 5
+const WAVE_AMPLITUDE = 0.16
+
+/**
+ * Shared sine-arc jump curve (brief 4.3): `sin(progress*π) * height` while
+ * `progress` runs 0→1 over some duration-normalized value, 0 once grounded
+ * (`progress >= 1`). Both the Work-section job jump ("Salto") and the tap
+ * reaction ("Toque") drive this with their own progress ref/height —
+ * mirrors mockup.html's `hop`/`poke` terms in its `jump` sum.
+ */
+function jumpOffset(progress: number, height: number): number {
+  return progress < 1 ? Math.sin(progress * Math.PI) * height : 0
+}
+
+/**
  * Shared DOM/canvas-internal transform handoff so the contact shadow can
  * track the avatar's current world position/scale without forcing a React
  * re-render every frame — brief section 8's "estado compartido ... en un
@@ -120,6 +165,13 @@ export function createAvatarTransform(): AvatarTransform {
 
 interface PoseFrameOptions {
   poseGroupRef: MutableRefObject<Group | null>
+  /**
+   * The `spin` child group (brief 4.3's "los giros extra van en un grupo
+   * hijo (spin)") — carries only the tap/flip one-shot rotations, never the
+   * continuous cursor-follow/idle rotation that lives on `poseGroupRef`'s
+   * group instead.
+   */
+  spinGroupRef: MutableRefObject<Group | null>
   transformRef: MutableRefObject<AvatarTransform>
   naturalHeight: number
   floorLocal: number
@@ -139,6 +191,7 @@ interface PoseFrameOptions {
  */
 export function useAvatarPoseFrame({
   poseGroupRef,
+  spinGroupRef,
   transformRef,
   naturalHeight,
   floorLocal,
@@ -147,7 +200,11 @@ export function useAvatarPoseFrame({
 }: PoseFrameOptions) {
   const currentPoseRef = useRef<Pose>({ ...INITIAL_DISPLAY_POSE })
   const jumpProgressRef = useRef(1) // 1 == grounded / no jump in flight
+  const pokeProgressRef = useRef(1) // 1 == no tap reaction in flight
+  const flipProgressRef = useRef(1) // 1 == no language-flip in flight
   const lastJumpVersionRef = useRef(workTrackingStore.getSnapshot().jumpVersion)
+  const lastPokeVersionRef = useRef(avatarActionStore.getSnapshot().pokeVersion)
+  const lastFlipVersionRef = useRef(avatarActionStore.getSnapshot().flipVersion)
   const tmpAnchorRef = useRef(new Vector3())
 
   useFrame((state, delta) => {
@@ -171,14 +228,57 @@ export function useAvatarPoseFrame({
     }
     lastJumpVersionRef.current = jumpVersion
 
+    // Tap trigger (brief 4.3 "Toque"): `AvatarTapListener` (Avatar.tsx)
+    // bumps `pokeVersion` on a hit-confirmed click. Flip trigger
+    // ("Voltereta"): the Header's ES/EN toggle bumps `flipVersion` before
+    // delaying the actual language swap. Both are read-and-diffed the same
+    // way as `jumpVersion` above, and both are skipped under reduced motion
+    // — `SpeechBubble.tsx` still reacts to `pokeVersion` independently of
+    // this, so tapping still shows a bubble with no physical reaction
+    // (brief section 6).
+    const { pokeVersion, flipVersion } = avatarActionStore.getSnapshot()
+    if (!reducedMotion && pokeVersion !== lastPokeVersionRef.current) {
+      pokeProgressRef.current = 0
+    }
+    lastPokeVersionRef.current = pokeVersion
+    if (!reducedMotion && flipVersion !== lastFlipVersionRef.current) {
+      flipProgressRef.current = 0
+    }
+    lastFlipVersionRef.current = flipVersion
+
     if (jumpProgressRef.current < 1) {
       jumpProgressRef.current = Math.min(1, jumpProgressRef.current + delta / JUMP_DURATION_SECONDS)
     }
+    if (pokeProgressRef.current < 1) {
+      pokeProgressRef.current = Math.min(1, pokeProgressRef.current + delta / POKE_DURATION_SECONDS)
+    }
+    if (flipProgressRef.current < 1) {
+      flipProgressRef.current = Math.min(1, flipProgressRef.current + delta / FLIP_DURATION_SECONDS)
+    }
     const jumpProgress = jumpProgressRef.current
+    const pokeProgress = pokeProgressRef.current
+    const flipProgress = flipProgressRef.current
     const jumpHeight =
-      !reducedMotion && jumpProgress < 1 ? Math.sin(jumpProgress * Math.PI) * JUMP_HEIGHT : 0
+      (!reducedMotion ? jumpOffset(jumpProgress, JUMP_HEIGHT) : 0) +
+      (!reducedMotion ? jumpOffset(pokeProgress, POKE_JUMP_HEIGHT) : 0)
     const jumpRz =
       !reducedMotion && jumpProgress < 1 ? Math.sin(jumpProgress * Math.PI * 2) * JUMP_Z_SWAY : 0
+
+    // Spin one-shots (brief 4.3: "los giros extra van en un grupo hijo
+    // (spin)") — a full turn on Y for the tap, a full *backward* turn on X
+    // for the flip, eased the same way the scroll-pose blend is
+    // (`easeInOutCubic`). Independent progress refs on different axes, so
+    // (mirroring mockup.html) a tap and a flip can be mid-flight at the same
+    // time with no mutual exclusion; re-triggering either one just restarts
+    // that one's own progress from 0, cutting its rotation back to the start
+    // rather than queueing or blending.
+    const spinPokeY = !reducedMotion && pokeProgress < 1 ? easeInOutCubic(pokeProgress) * Math.PI * 2 : 0
+    const spinFlipX =
+      !reducedMotion && flipProgress < 1 ? -easeInOutCubic(flipProgress) * Math.PI * 2 : 0
+    const spinGroup = spinGroupRef.current
+    if (spinGroup) {
+      spinGroup.rotation.set(spinFlipX, spinPokeY, 0)
+    }
 
     const { visibleWidth, visibleHeight } = getVisibleSize(
       state.camera as PerspectiveCamera,
@@ -201,9 +301,14 @@ export function useAvatarPoseFrame({
     // shadow "no sube con los saltos") — see `transform.y` below.
     const worldY = baseWorldY + (bob + jumpHeight) * scale
 
+    // Greeting wave (brief 4.3 "Saludo"): `rz += wave * sin(t*5) * 0.16`.
+    // `current.wave` is already the pose's damped 0-1 value (1 at Contact,
+    // 0 elsewhere, smoothed through the same exponential `k` above).
+    const waveRz = !reducedMotion ? current.wave * Math.sin(clock * WAVE_FREQUENCY) * WAVE_AMPLITUDE : 0
+
     group.position.set(worldX, worldY, 0)
     group.scale.setScalar(scale * breathe)
-    group.rotation.set(current.rx + rx, current.ry + ry, current.rz + jumpRz)
+    group.rotation.set(current.rx + rx, current.ry + ry, current.rz + jumpRz + waveRz)
 
     const transform = transformRef.current
     transform.x = worldX
@@ -231,5 +336,20 @@ export function useAvatarPoseFrame({
     } else {
       specLinesStore.update(specLinesStore.getSnapshot().anchors, dominant, p, 0)
     }
+
+    // Speech bubble anchor (brief 4.4): projects through `spin`'s world
+    // transform rather than the outer pose group's, so the bubble tracks
+    // the model itself (including any tap/flip spin in flight) — `spin` is
+    // a descendant of `group`, so `group.updateMatrixWorld(true)` above
+    // already refreshed its `matrixWorld` too. Falls back to the pose
+    // group's own matrix on the very first frame(s), before the ref
+    // attaches.
+    const headTmp = tmpAnchorRef.current
+    const headMatrix = spinGroup ? spinGroup.matrixWorld : group.matrixWorld
+    headTmp.copy(HEAD_ANCHOR).applyMatrix4(headMatrix).project(state.camera)
+    avatarHeadStore.update(
+      [((headTmp.x + 1) / 2) * state.size.width, ((1 - headTmp.y) / 2) * state.size.height],
+      dominant,
+    )
   })
 }
