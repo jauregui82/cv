@@ -74,9 +74,6 @@ export interface Content {
     email: string
     copyLabel: string
     copiedLabel: string
-    whatsappLabel: string
-    whatsappDisplay: string
-    whatsappLink: string
     locationLabel: string
     locationValue: string
   }

@@ -41,17 +41,6 @@ export function Contact() {
             </button>
           </div>
           <div>
-            <span className="mono">{contact.whatsappLabel}</span>
-            <a
-              className="val"
-              href={contact.whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {contact.whatsappDisplay}
-            </a>
-          </div>
-          <div>
             <span className="mono">{contact.locationLabel}</span>
             <span className="val">{contact.locationValue}</span>
           </div>

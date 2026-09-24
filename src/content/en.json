@@ -31,9 +31,18 @@
       "I've shipped the full in-store pickup flow for Cencosud, worked on international products like SoundExchange, Whitepages and Campomar, built internal UI libraries published to AWS CodeArtifact, and migrated legacy front-ends to React + Redux."
     ],
     "stats": [
-      { "label": "years in front-end", "value": "6+" },
-      { "label": "teams & clients", "value": "7" },
-      { "label": "countries · VE · PE · CL", "value": "3" }
+      {
+        "label": "years in front-end",
+        "value": "6+"
+      },
+      {
+        "label": "teams & clients",
+        "value": "7"
+      },
+      {
+        "label": "countries · VE · PE · CL",
+        "value": "3"
+      }
     ]
   },
   "specs": {
@@ -43,11 +52,26 @@
     "modelLine1": "Front-End · build 2016–2026",
     "modelLine2": "Weight: 0 kg of legacy code",
     "groups": [
-      { "label": "Brain", "text": "React · Next.js · TypeScript · JavaScript ES6+" },
-      { "label": "Vision", "text": "UI architecture · Accessibility · Web performance" },
-      { "label": "Core", "text": "Redux · React Query · Apollo GraphQL" },
-      { "label": "Hands", "text": "Jest · Cypress · Testing Library" },
-      { "label": "Base", "text": "AWS · CI/CD · CodeArtifact · Git" }
+      {
+        "label": "Brain",
+        "text": "React · Next.js · TypeScript · JavaScript ES6+"
+      },
+      {
+        "label": "Vision",
+        "text": "UI architecture · Accessibility · Web performance"
+      },
+      {
+        "label": "Core",
+        "text": "Redux · React Query · Apollo GraphQL"
+      },
+      {
+        "label": "Hands",
+        "text": "Jest · Cypress · Testing Library"
+      },
+      {
+        "label": "Base",
+        "text": "AWS · CI/CD · CodeArtifact · Git"
+      }
     ],
     "tail": "Field-tested with Scrum, Kanban, Material-UI, SASS and Bootstrap."
   },
@@ -100,9 +124,18 @@
     ],
     "educationKicker": "Education",
     "education": [
-      { "term": "2010 — 2016", "description": "Computer Engineering — UPTAMCA, Venezuela" },
-      { "term": "2025", "description": "General English — EC English Language Centres" },
-      { "term": "Before", "description": "M&M Consultores, S&C Sistemas, Soluciones Medianet, Key Systems" }
+      {
+        "term": "2010 — 2016",
+        "description": "Computer Engineering — UPTAMCA, Venezuela"
+      },
+      {
+        "term": "2025",
+        "description": "General English — EC English Language Centres"
+      },
+      {
+        "term": "Before",
+        "description": "M&M Consultores, S&C Sistemas, Soluciones Medianet, Key Systems"
+      }
     ]
   },
   "contact": {
@@ -112,9 +145,6 @@
     "email": "jauregui.crespo@gmail.com",
     "copyLabel": "Copy email",
     "copiedLabel": "Copied",
-    "whatsappLabel": "WhatsApp",
-    "whatsappDisplay": "+56 9 3739 39 63",
-    "whatsappLink": "https://api.whatsapp.com/send?phone=56937393963",
     "locationLabel": "Based in",
     "locationValue": "Santiago, Chile — remote friendly"
   },
