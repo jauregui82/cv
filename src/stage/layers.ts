@@ -28,7 +28,7 @@ import type { PokeKind } from './store'
  */
 const SPEC_ANCHORS: readonly Vector3[] = [
   new Vector3(0.02, 0.48, -0.2), // Cerebro · moño
-  new Vector3(0.2, 0.13, 0.33), // Visión · gafas
+  new Vector3(0.2, -0.08, 0.33), // Visión · gafas
   new Vector3(-0.36, -0.06, -0.11), // Oído
   new Vector3(0.03, -0.17, 0.38), // Olfato
   new Vector3(-0.06, -0.43, 0.28), // Barba
