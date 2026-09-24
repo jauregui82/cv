@@ -11,7 +11,11 @@ import { useScrollPose } from './useScrollPose'
 import { avatarActionStore } from './store'
 import type { Variant } from '../hooks/useVariant'
 
-const MODEL_PATH = '/models/avatar.glb'
+// Runtime string, not a build-time import - Vite's `base` rewriting (needed
+// for the site to work under a subpath like GitHub Pages' /cv/) only
+// applies to asset references it can see at build time (index.html links,
+// static imports). BASE_URL is Vite's own env var for exactly this case.
+const MODEL_PATH = `${import.meta.env.BASE_URL}models/avatar.glb`
 
 // avatar.glb now ships a real baked PBR material (base color + normal +
 // metallic/roughness textures, matching the reference photo) instead of the
