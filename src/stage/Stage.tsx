@@ -102,13 +102,15 @@ interface ContactShadowProps {
 }
 
 /**
- * Static contact shadow under the avatar's feet (brief 4.3). Reads the
- * avatar's current world transform from `transformRef` each frame. `x`/`y`
- * there deliberately exclude the jump offset (see `layers.ts`), so the
- * shadow "no sube con los saltos"; `jumpHeight` drives its opacity fading
- * out while airborne, mirroring mockup.html's
- * `opacity * (1 - min(.7, jump*1.4))`.
+ * Static contact shadow under the avatar (brief v2 §5): smaller than the
+ * old full-body shadow, sitting a fixed `0.64·scale` below the avatar's
+ * (bob-free) center rather than tracking the model's actual floor. Reads
+ * the avatar's current world transform from `transformRef` each frame;
+ * `jumpHeight` (the bounce tap reaction's lift) drives its opacity fading
+ * out while airborne.
  */
+const SHADOW_Y_OFFSET = 0.64
+
 function ContactShadow({ variant, transformRef }: ContactShadowProps) {
   const meshRef = useRef<Mesh>(null)
   const texture = useMemo(() => makeShadowTexture(), [])
@@ -117,10 +119,10 @@ function ContactShadow({ variant, transformRef }: ContactShadowProps) {
     const mesh = meshRef.current
     if (!mesh) return
     const transform = transformRef.current
-    const feetY = transform.y + transform.floorLocal * transform.scale
+    const feetY = transform.y - SHADOW_Y_OFFSET * transform.scale
 
     mesh.position.set(transform.x, feetY, -0.2)
-    mesh.scale.set(transform.scale * 1.25, transform.scale * 0.5, 1)
+    mesh.scale.set(transform.scale * 0.9, transform.scale * 0.32, 1)
     const airborneFade = 1 - Math.min(0.7, transform.jumpHeight * 1.4)
     // No shadow while the head sits in the hero's letter slot (brief v2 §3).
     ;(mesh.material as MeshBasicMaterial).opacity =

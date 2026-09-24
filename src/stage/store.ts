@@ -10,8 +10,8 @@
  * per animation frame; nothing here is React state, so none of this causes
  * a render.
  *
- * `jumpVersion` is the discrete "active job changed" signal (brief 4.3
- * "Salto"): it only increments on a genuine transition between two known
+ * `jumpVersion` is the discrete "active job changed" signal (brief v2 §5
+ * "Asentir"): it only increments on a genuine transition between two known
  * jobs, mirroring mockup.html's `activeJob !== -1 && best !== -1` guard —
  * so the initial detection on mount, and losing track when scrolled away
  * from the Work section, don't fire a spurious jump. `layers.ts` polls this
@@ -98,26 +98,31 @@ export const specLinesStore = {
 }
 
 /**
- * DOM -> canvas one-shot triggers for the two "spin"-group animations
- * (brief 4.3 "Toque"/"Voltereta"): `AvatarTapListener` (`Avatar.tsx`) bumps
- * `pokeVersion` on a hit-confirmed click, and the Header's ES/EN toggle
- * bumps `flipVersion` before delaying the actual language swap by 450ms.
- * `layers.ts` polls `getSnapshot()` once per frame and diffs each version
- * against the value it last saw — same "fire once per transition" pattern
- * as `workTrackingStore.jumpVersion` above. Poke and flip are independent
- * counters (not a single "busy" flag): the mockup's own `poke`/`flip`
- * progress vars drive different `spin` rotation axes (Y vs X) and are never
- * checked against each other, so both can be in flight at once, and
- * re-triggering either one just restarts that one's progress from 0 —
- * mirrored exactly here, see `layers.ts`.
+ * DOM -> canvas one-shot triggers for the "spin"-group animations (brief v2
+ * §5 "Toque"/"Idioma"): `AvatarTapListener` (`Avatar.tsx`) bumps
+ * `pokeVersion` and rolls a fresh `pokeKind` on a hit-confirmed click; the
+ * Header's ES/EN toggle bumps `flipVersion` before delaying the actual
+ * language swap by 550ms. `layers.ts` polls `getSnapshot()` once per frame
+ * and diffs each version against the value it last saw — same "fire once
+ * per transition" pattern as `workTrackingStore.jumpVersion` above. Poke and
+ * flip are independent counters (not a single "busy" flag): both drive the
+ * same `spin` Y rotation but are never checked against each other, so both
+ * can be in flight at once, and re-triggering either one just restarts that
+ * one's progress from 0 — mirrored exactly here, see `layers.ts`.
  */
+export type PokeKind = 0 | 1 | 2
+
 export interface AvatarActionSnapshot {
   pokeVersion: number
+  /** Which of the 3 tap reactions (spin/shake/bounce) is in flight — rolled
+   * fresh on every `triggerPoke()` call. */
+  pokeKind: PokeKind
   flipVersion: number
 }
 
 const avatarActionSnapshot: AvatarActionSnapshot = {
   pokeVersion: 0,
+  pokeKind: 0,
   flipVersion: 0,
 }
 
@@ -128,6 +133,7 @@ export const avatarActionStore = {
 
   triggerPoke() {
     avatarActionSnapshot.pokeVersion += 1
+    avatarActionSnapshot.pokeKind = Math.floor(Math.random() * 3) as PokeKind
   },
 
   triggerFlip() {

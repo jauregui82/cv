@@ -28,7 +28,7 @@ export interface Pose {
   rz: number
   /** Cursor-follow amount, 0-1 (brief 4.2/4.3). */
   look: number
-  /** Greeting-wiggle amount, 0-1 — tracked but unused until Phase 5. */
+  /** Contact "yes"-nodding gate, 0-1 (1 in Contact, 0 elsewhere). */
   wave: number
   /** Stack callout-lines visibility, 0-1 — tracked but unused until Phase 4. */
   specs: number
@@ -71,8 +71,8 @@ function clamp(value: number, min: number, max: number): number {
 }
 
 /**
- * Brief table 4.2, one section at a time. `p` drives the Specs section's
- * `ry = sin(p*2π)*0.7` (suppressed under reduced motion — brief section 6's
+ * Brief v2 §4, one section at a time. `p` drives the Specs section's
+ * `ry = sin(p*2π)*0.9` (suppressed under reduced motion — brief section 6's
  * "sin ... giros atados al scroll"). The Work section's `y` is not a table
  * constant; it comes from `ctx.workY`, fed by the active-job tracking in
  * `src/sections/Work.tsx` via `store.ts`.
@@ -90,17 +90,17 @@ export function basePose(section: SectionIndex, ctx: PoseContext): Pose {
         ? { x: heroSlot.x, y: heroSlot.y, h: heroSlot.h, ry: 0, rx: 0, rz: 0, look: 1, wave: 0, specs: 0, slot: 1 }
         : { ...INITIAL_DISPLAY_POSE, slot: 1 }
 
-    case 1: // About
+    case 1: // About — curious head tilt; rx dips as you read (rx = -0.1 + p*0.42)
       return mobile
-        ? { x: 1.02, y: -0.5, h: 0.26, ry: -0.9, rx: 0.1, rz: 0.18, look: 0.4, wave: 0, specs: 0, slot: 0 }
-        : { x: -0.6, y: -0.06, h: 0.58, ry: 0.7, rx: 0.14, rz: -0.08, look: 0.4, wave: 0, specs: 0, slot: 0 }
+        ? { x: 1.0, y: -0.45, h: 0.24, ry: -0.85, rx: 0.05, rz: 0.22, look: 0.4, wave: 0, specs: 0, slot: 0 }
+        : { x: -0.58, y: 0, h: 0.5, ry: 0.55, rx: -0.1 + p * 0.42, rz: -0.14, look: 0.35, wave: 0, specs: 0, slot: 0 }
 
     case 2: // Specs / Stack
       return {
         x: 0,
-        y: mobile ? 0.1 : -0.02,
-        h: mobile ? 0.22 : 0.56,
-        ry: reducedMotion ? 0 : Math.sin(p * Math.PI * 2) * 0.7,
+        y: mobile ? 0.1 : -0.04,
+        h: mobile ? 0.22 : 0.5,
+        ry: reducedMotion ? 0 : Math.sin(p * Math.PI * 2) * 0.9,
         rx: 0.04,
         rz: 0,
         look: 0,
@@ -110,39 +110,14 @@ export function basePose(section: SectionIndex, ctx: PoseContext): Pose {
       }
 
     case 3: { // Work / Trayectoria — y tracks the active job (see workY above)
-      const fallbackY = mobile ? -0.1 : 0
-      const y = workY ?? fallbackY
+      const y = clamp(workY ?? 0, -0.6, 0.55)
       return mobile
-        ? {
-            x: 1.02,
-            y: clamp(y, -0.6, 0.4),
-            h: 0.22,
-            ry: -0.9,
-            rx: 0,
-            rz: 0.18,
-            look: 0.3,
-            wave: 0,
-            specs: 0,
-            slot: 0,
-          }
-        : {
-            x: -0.66,
-            y: clamp(y, -0.6, 0.55) - 0.08,
-            h: 0.3,
-            ry: 0.9,
-            rx: 0,
-            rz: 0,
-            look: 0.3,
-            wave: 0,
-            specs: 0,
-            slot: 0,
-          }
+        ? { x: 1.0, y: clamp(y, -0.6, 0.4), h: 0.2, ry: -0.85, rx: 0.05, rz: 0.2, look: 0.3, wave: 0, specs: 0, slot: 0 }
+        : { x: -0.64, y: y - 0.04, h: 0.26, ry: 0.75, rx: 0.08, rz: -0.06, look: 0.3, wave: 0, specs: 0, slot: 0 }
     }
 
     case 4: // Contact
-      return mobile
-        ? { x: 0, y: 0.52, h: 0.26, ry: 0, rx: 0, rz: 0, look: 0.6, wave: 1, specs: 0, slot: 0 }
-        : { x: 0, y: 0.3, h: 0.46, ry: 0, rx: 0, rz: 0, look: 0.6, wave: 1, specs: 0, slot: 0 }
+      return { x: 0, y: 0.5, h: mobile ? 0.22 : 0.3, ry: 0, rx: 0, rz: 0, look: 0.6, wave: 1, specs: 0, slot: 0 }
   }
 }
 

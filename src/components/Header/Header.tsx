@@ -5,11 +5,11 @@ import { avatarActionStore } from '../../stage/store'
 import type { Language } from '../../content'
 import './Header.css'
 
-/** Brief 4.3 "Voltereta": "el idioma cambia a mitad del giro (450ms)" — the
- * flip itself (triggered below) runs 1s total on the `spin` group
- * (`layers.ts`); the actual `setLanguage` call is delayed to this midpoint
- * so the text visibly swaps mid-turn instead of at click time. */
-const LANGUAGE_FLIP_MIDPOINT_MS = 450
+/** Brief v2 §5 "Idioma": the flip itself (triggered below) runs 1.1s total,
+ * a full Y turn, on the `spin` group (`layers.ts`); the actual `setLanguage`
+ * call is delayed to this midpoint so the text visibly swaps mid-turn
+ * instead of at click time. */
+const LANGUAGE_FLIP_MIDPOINT_MS = 550
 
 export function Header() {
   const { content, language, setLanguage } = useLanguage()
