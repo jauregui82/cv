@@ -53,8 +53,8 @@ export const workTrackingStore = {
  * (`src/stage/SpecLines.tsx`) for the Stack section's leader lines (brief
  * 5.4 + 4.5). `layers.ts` writes this every animation frame from inside the
  * R3F tree, where the avatar's `matrixWorld` and the camera are available —
- * it projects the 5 model-space anchor points (brain/glasses/torso/hand/
- * feet) through the avatar's current world transform and the camera into
+ * it projects the 5 model-space anchor points (moño/gafas/oído/olfato/barba)
+ * through the avatar's current world transform and the camera into
  * screen-space pixels. `SpecLines.tsx` reads `getSnapshot()` from its own
  * `requestAnimationFrame` loop outside the canvas and imperatively updates
  * SVG element attributes with it — nothing here is React state, so none of
@@ -62,7 +62,7 @@ export const workTrackingStore = {
  */
 export interface SpecLinesSnapshot {
   /** Screen-space [x, y] px for each of the 5 anchor points, in
-   * `content.specs.groups` order (Cerebro/Visión/Núcleo/Manos/Base). `null`
+   * `content.specs.groups` order (Cerebro/Visión/Oído/Olfato/Barba). `null`
    * entries are only possible before the avatar's first frame. */
   anchors: ([number, number] | null)[]
   /** Raw (undamped) dominant section index from this frame's scroll-pose
@@ -75,6 +75,11 @@ export interface SpecLinesSnapshot {
    * after the same exponential smoothing as the rest of the displayed pose
    * (brief 4.2's `k`); 0 outside Specs' held+blend range. */
   opacity: number
+  /** Per-anchor line opacity (brief v2 §6): `specs * clamp(0.5 + n.z*0.9,
+   * 0.25, 1)`, `n` being that anchor's normal rotated by the same matrix
+   * used to project its position. Fades a line toward (never below 0.25x
+   * `opacity`) when its anchor faces away from the camera. */
+  lineOpacities: number[]
 }
 
 const specLinesSnapshot: SpecLinesSnapshot = {
@@ -82,6 +87,7 @@ const specLinesSnapshot: SpecLinesSnapshot = {
   dominant: 0,
   p: 0,
   opacity: 0,
+  lineOpacities: [1, 1, 1, 1, 1],
 }
 
 export const specLinesStore = {
@@ -89,11 +95,18 @@ export const specLinesStore = {
     return specLinesSnapshot
   },
 
-  update(anchors: ([number, number] | null)[], dominant: SectionIndex, p: number, opacity: number) {
+  update(
+    anchors: ([number, number] | null)[],
+    dominant: SectionIndex,
+    p: number,
+    opacity: number,
+    lineOpacities: number[],
+  ) {
     specLinesSnapshot.anchors = anchors
     specLinesSnapshot.dominant = dominant
     specLinesSnapshot.p = p
     specLinesSnapshot.opacity = opacity
+    specLinesSnapshot.lineOpacities = lineOpacities
   },
 }
 

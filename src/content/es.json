@@ -53,23 +53,23 @@
     "modelLine2": "Peso: 0 kg de código legacy",
     "groups": [
       {
-        "label": "Cerebro",
+        "label": "Cerebro · moño",
         "text": "React · Next.js · TypeScript · JavaScript ES6+"
       },
       {
-        "label": "Visión",
+        "label": "Visión · gafas",
         "text": "Arquitectura UI · Accesibilidad · Rendimiento web"
       },
       {
-        "label": "Núcleo",
+        "label": "Oído · escucha el estado",
         "text": "Redux · React Query · Apollo GraphQL"
       },
       {
-        "label": "Manos",
+        "label": "Olfato · huele los bugs",
         "text": "Jest · Cypress · Testing Library"
       },
       {
-        "label": "Base",
+        "label": "Barba · crece con cada deploy",
         "text": "AWS · CI/CD · CodeArtifact · Git"
       }
     ],
@@ -150,16 +150,16 @@
   },
   "speech": {
     "lines": [
-      "¡Hola! Soy yo, versión 3D.",
-      "Esta parte la escribí yo.",
-      "Ficha técnica. No mires tanto.",
+      "Sí, soy la «o» de Crespo.",
+      "Leo contigo.",
+      "Todo está en la cabeza.",
       "Vamos por orden.",
-      "¡Escríbeme!"
+      "Yo digo que sí."
     ],
     "pokes": [
       "¡Eh, cosquillas!",
       "Compilando…",
-      "npm run saltar",
+      "Me mareo…",
       "Sin tocar el DOM, porfa"
     ]
   },

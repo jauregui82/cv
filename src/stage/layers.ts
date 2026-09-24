@@ -22,19 +22,29 @@ import {
 import type { PokeKind } from './store'
 
 /**
- * Model-space anchor points for the Stack section's leader lines (brief 4.5
- * + 5.4). Order matches `content.specs.groups` in `es.json`/`en.json`
- * (Cerebro/Visión/Núcleo/Manos/Base) and mockup.html's `ANCHORS` array — the
- * brief's anchor table doesn't name which tag maps to which point, so this
- * mapping is ours: Cerebro→brain, Visión→glasses, Núcleo→torso, Manos→hand,
- * Base→feet.
+ * Model-space anchor points for the Stack section's leader lines (brief v2
+ * §6, head-only model). Order matches `content.specs.groups` in
+ * `es.json`/`en.json`: Cerebro·moño, Visión·gafas, Oído, Olfato, Barba.
  */
 const SPEC_ANCHORS: readonly Vector3[] = [
-  new Vector3(0.12, 0.86, 0.22), // Cerebro
-  new Vector3(0.26, 0.18, 0.47), // Visión
-  new Vector3(-0.05, -0.38, 0.25), // Núcleo
-  new Vector3(0.31, -0.45, 0.12), // Manos
-  new Vector3(-0.17, -0.92, 0.24), // Base
+  new Vector3(0.02, 0.48, -0.2), // Cerebro · moño
+  new Vector3(0.2, 0.13, 0.33), // Visión · gafas
+  new Vector3(-0.36, -0.06, -0.11), // Oído
+  new Vector3(0.03, -0.17, 0.38), // Olfato
+  new Vector3(-0.06, -0.43, 0.28), // Barba
+]
+
+/**
+ * Per-anchor normal used to attenuate each leader line's opacity (brief v2
+ * §6) as the head turns that part away from the camera. Normalized once
+ * here, same as mockup.html's `NORMALS`.
+ */
+const SPEC_NORMALS: readonly Vector3[] = [
+  new Vector3(0, 1, -0.3).normalize(),
+  new Vector3(0, 0, 1).normalize(),
+  new Vector3(-1, 0, 0).normalize(),
+  new Vector3(0, 0, 1).normalize(),
+  new Vector3(0, -0.4, 1).normalize(),
 ]
 
 /** Mirrors mockup.html's `cur.specs > .02` gate for computing/showing the
@@ -43,12 +53,12 @@ const SPEC_ANCHORS: readonly Vector3[] = [
 const SPEC_LINES_VISIBLE_EPSILON = 0.02
 
 /**
- * Model-space anchor for the speech bubble (brief 4.4): the point the
+ * Model-space anchor for the speech bubble (brief v2 §7): the point the
  * bubble is projected from every frame. Deliberately distinct from
- * `SPEC_ANCHORS`'s Cerebro point (0.12, 0.86, 0.22) used for the Stack
- * section's leader lines — see `avatarHeadStore` (`store.ts`).
+ * `SPEC_ANCHORS`'s Cerebro point used for the Stack section's leader lines —
+ * see `avatarHeadStore` (`store.ts`).
  */
-const HEAD_ANCHOR = new Vector3(0.1, 0.98, 0)
+const HEAD_ANCHOR = new Vector3(0.12, 0.5, 0)
 
 /**
  * Visible plane size (world units) at z = 0 for a perspective camera sitting
@@ -223,6 +233,7 @@ export function useAvatarPoseFrame({
   const lastPokeVersionRef = useRef(avatarActionStore.getSnapshot().pokeVersion)
   const lastFlipVersionRef = useRef(avatarActionStore.getSnapshot().flipVersion)
   const tmpAnchorRef = useRef(new Vector3())
+  const tmpNormalRef = useRef(new Vector3())
 
   useFrame((state, delta) => {
     const group = poseGroupRef.current
@@ -363,13 +374,25 @@ export function useAvatarPoseFrame({
 
     if (current.specs > SPEC_LINES_VISIBLE_EPSILON) {
       const tmp = tmpAnchorRef.current
-      const anchors = SPEC_ANCHORS.map((anchor): [number, number] => {
-        tmp.copy(anchor).applyMatrix4(group.matrixWorld).project(state.camera)
-        return [((tmp.x + 1) / 2) * state.size.width, ((1 - tmp.y) / 2) * state.size.height]
-      })
-      specLinesStore.update(anchors, dominant, p, current.specs)
+      const tmpNormal = tmpNormalRef.current
+      const anchors: [number, number][] = []
+      const lineOpacities: number[] = []
+      for (let i = 0; i < SPEC_ANCHORS.length; i++) {
+        tmp.copy(SPEC_ANCHORS[i]).applyMatrix4(group.matrixWorld).project(state.camera)
+        anchors.push([((tmp.x + 1) / 2) * state.size.width, ((1 - tmp.y) / 2) * state.size.height])
+
+        // Attenuation (brief v2 §6): rotate the anchor's normal by the same
+        // matrix used to project its position above, then fade the line as
+        // that part of the head turns away from the camera — never below
+        // 0.25, so a line dims but never fully disappears.
+        tmpNormal.copy(SPEC_NORMALS[i]).transformDirection(group.matrixWorld)
+        const facing = Math.min(1, Math.max(0.25, 0.5 + tmpNormal.z * 0.9))
+        lineOpacities.push(current.specs * facing)
+      }
+      specLinesStore.update(anchors, dominant, p, current.specs, lineOpacities)
     } else {
-      specLinesStore.update(specLinesStore.getSnapshot().anchors, dominant, p, 0)
+      const snapshot = specLinesStore.getSnapshot()
+      specLinesStore.update(snapshot.anchors, dominant, p, 0, snapshot.lineOpacities)
     }
 
     // Speech bubble anchor (brief 4.4): projects through `spin`'s world

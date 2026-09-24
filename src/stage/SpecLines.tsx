@@ -124,11 +124,15 @@ export function SpecLines() {
           ey = ly
         }
 
+        // Brief v2 §6: per-anchor opacity, not the shared `snapshot.opacity`
+        // — a line dims (never fully vanishes) once its anchor turns away
+        // from the camera, independently of the other 4.
+        const lineOpacity = (snapshot.lineOpacities[i] ?? snapshot.opacity).toFixed(2)
         path.setAttribute('d', `M${lx},${ly} L${ex},${ey} L${ax},${ay}`)
-        path.setAttribute('opacity', snapshot.opacity.toFixed(2))
+        path.setAttribute('opacity', lineOpacity)
         circle.setAttribute('cx', String(ax))
         circle.setAttribute('cy', String(ay))
-        circle.setAttribute('opacity', snapshot.opacity.toFixed(2))
+        circle.setAttribute('opacity', lineOpacity)
       }
     }
 
