@@ -12,7 +12,13 @@ import {
 } from './choreography'
 import type { Pose } from './choreography'
 import type { ScrollPoseApi } from './useScrollPose'
-import { avatarActionStore, avatarHeadStore, specLinesStore, workTrackingStore } from './store'
+import {
+  avatarActionStore,
+  avatarHeadStore,
+  heroOStore,
+  specLinesStore,
+  workTrackingStore,
+} from './store'
 
 /**
  * Model-space anchor points for the Stack section's leader lines (brief 4.5
@@ -127,6 +133,9 @@ const FLIP_DURATION_SECONDS = 1
 const WAVE_FREQUENCY = 5
 const WAVE_AMPLITUDE = 0.16
 
+/** Real "o" opacity rate (brief v2 §3): `1 - min(1, slot*1.25)`. */
+const HERO_O_FADE_RATE = 1.25
+
 /**
  * Shared sine-arc jump curve (brief 4.3): `sin(progress*π) * height` while
  * `progress` runs 0→1 over some duration-normalized value, 0 once grounded
@@ -157,10 +166,14 @@ export interface AvatarTransform {
    * from `y` above so the shadow itself "no sube con los saltos".
    */
   jumpHeight: number
+  /** Damped `slot` pose value (brief v2 §3) — `ContactShadow` (`Stage.tsx`)
+   * multiplies its opacity by `(1 - slot)`: no shadow while the head sits
+   * in the hero's letter slot. */
+  slot: number
 }
 
 export function createAvatarTransform(): AvatarTransform {
-  return { x: 0, y: 0, scale: 0, floorLocal: -0.95, jumpHeight: 0 }
+  return { x: 0, y: 0, scale: 0, floorLocal: -0.95, jumpHeight: 0, slot: 1 }
 }
 
 interface PoseFrameOptions {
@@ -316,6 +329,11 @@ export function useAvatarPoseFrame({
     transform.scale = scale
     transform.floorLocal = floorLocal
     transform.jumpHeight = jumpHeight
+    transform.slot = current.slot
+
+    // Real "o" glyph opacity (brief v2 §3): fully hidden once the head has
+    // settled into the slot, back to normal once it's left.
+    heroOStore.update(1 - Math.min(1, current.slot * HERO_O_FADE_RATE))
 
     // Stack leader lines (brief 5.4 + 4.5): project the 5 model-space
     // anchors through the avatar's *this-frame* world transform. R3F's

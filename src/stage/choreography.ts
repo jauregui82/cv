@@ -32,9 +32,11 @@ export interface Pose {
   wave: number
   /** Stack callout-lines visibility, 0-1 — tracked but unused until Phase 4. */
   specs: number
+  /** 1 in the hero (head sits on the "o" of "Crespo"), 0 elsewhere (brief v2 §3). */
+  slot: number
 }
 
-export const POSE_KEYS = ['x', 'y', 'h', 'ry', 'rx', 'rz', 'look', 'wave', 'specs'] as const
+export const POSE_KEYS = ['x', 'y', 'h', 'ry', 'rx', 'rz', 'look', 'wave', 'specs', 'slot'] as const
 
 /** mockup.html's `cur` initial value (the Hero desktop pose) — what the
  * avatar renders as before the first `useScrollPose` measurement resolves. */
@@ -48,6 +50,7 @@ export const INITIAL_DISPLAY_POSE: Pose = {
   look: 1,
   wave: 0,
   specs: 0,
+  slot: 1,
 }
 
 export interface PoseContext {
@@ -57,6 +60,9 @@ export interface PoseContext {
   /** Normalized (-1..1) target Y for the Work section's active job, or
    * `null` before the first job has been measured. */
   workY: number | null
+  /** Hero's live pose, derived every frame from the `.o-slot` letter's
+   * screen position (brief v2 §3) — `null` before the first measurement. */
+  heroSlot: { x: number; y: number; h: number } | null
   reducedMotion: boolean
 }
 
@@ -72,43 +78,22 @@ function clamp(value: number, min: number, max: number): number {
  * `src/sections/Work.tsx` via `store.ts`.
  */
 export function basePose(section: SectionIndex, ctx: PoseContext): Pose {
-  const { mobile, p, workY, reducedMotion } = ctx
+  const { mobile, p, workY, heroSlot, reducedMotion } = ctx
 
   switch (section) {
-    case 0: // Hero
-      return mobile
-        ? // Brief table literally says `y:-0.3, h:0.3` here, but at that
-          // size/position the avatar overlaps `.hero .lede` (the intro
-          // paragraph) on mobile — forbidden by brief section 6 ("en las
-          // poses fijas no debe tapar párrafos"). Fixed to `y:0.13, h:0.21`
-          // in commit fbcd339 (Phase 2 verification) — that verification
-          // only checked the static scrollY=0 render, since Phase 2 had no
-          // scroll-driven poses yet.
-          //
-          // Phase 3 scrutiny found the *same* overlap resurfaces at
-          // `y:0.13, h:0.21` once scroll-tied poses are real: Hero's held
-          // range runs from scrollY 0 to ~211px (`bottom - 0.75*vh`) on a
-          // 390x844 viewport, and `.lede` — an ordinary in-flow paragraph —
-          // scrolls up 1:1 with the page while the avatar's screen position
-          // stays fixed. At `y:0.13, h:0.21` the avatar's on-screen band is
-          // ~[278px, 456px]; `.lede` sweeps from ~[473px, 550px] (scrollY 0)
-          // up to ~[262px, 339px] (scrollY 211) — those two bands overlap
-          // for most of the range, reproducible by scrolling to roughly the
-          // middle of Hero's own held range (not just its start).
-          //
-          // Retuned again to `y:0.56, h:0.15`: smaller and anchored higher,
-          // so its band (~[122px, 249px]) sits fully above `.lede`'s entire
-          // swept range (up to ~262px) with a safety margin, while still
-          // clearing the mono eyebrow label above it. It now overlaps the
-          // giant name instead — explicitly allowed by brief section 6
-          // ("los títulos gigantes sí se pueden tapar").
-          { x: 0, y: 0.56, h: 0.15, ry: 0, rx: 0, rz: 0, look: 1, wave: 0, specs: 0 }
-        : { x: 0, y: -0.08, h: 0.7, ry: 0, rx: 0, rz: 0, look: 1, wave: 0, specs: 0 }
+    // Hero: the head sits on the last "o" of "Crespo" (brief v2 §3), same
+    // pose on desktop and mobile — no static table row anymore. Falls back
+    // to the pre-v2 desktop values (INITIAL_DISPLAY_POSE) for the first
+    // frame or two before `.o-slot` has been measured.
+    case 0:
+      return heroSlot
+        ? { x: heroSlot.x, y: heroSlot.y, h: heroSlot.h, ry: 0, rx: 0, rz: 0, look: 1, wave: 0, specs: 0, slot: 1 }
+        : { ...INITIAL_DISPLAY_POSE, slot: 1 }
 
     case 1: // About
       return mobile
-        ? { x: 1.02, y: -0.5, h: 0.26, ry: -0.9, rx: 0.1, rz: 0.18, look: 0.4, wave: 0, specs: 0 }
-        : { x: -0.6, y: -0.06, h: 0.58, ry: 0.7, rx: 0.14, rz: -0.08, look: 0.4, wave: 0, specs: 0 }
+        ? { x: 1.02, y: -0.5, h: 0.26, ry: -0.9, rx: 0.1, rz: 0.18, look: 0.4, wave: 0, specs: 0, slot: 0 }
+        : { x: -0.6, y: -0.06, h: 0.58, ry: 0.7, rx: 0.14, rz: -0.08, look: 0.4, wave: 0, specs: 0, slot: 0 }
 
     case 2: // Specs / Stack
       return {
@@ -121,6 +106,7 @@ export function basePose(section: SectionIndex, ctx: PoseContext): Pose {
         look: 0,
         wave: 0,
         specs: 1,
+        slot: 0,
       }
 
     case 3: { // Work / Trayectoria — y tracks the active job (see workY above)
@@ -137,6 +123,7 @@ export function basePose(section: SectionIndex, ctx: PoseContext): Pose {
             look: 0.3,
             wave: 0,
             specs: 0,
+            slot: 0,
           }
         : {
             x: -0.66,
@@ -148,13 +135,14 @@ export function basePose(section: SectionIndex, ctx: PoseContext): Pose {
             look: 0.3,
             wave: 0,
             specs: 0,
+            slot: 0,
           }
     }
 
     case 4: // Contact
       return mobile
-        ? { x: 0, y: 0.52, h: 0.26, ry: 0, rx: 0, rz: 0, look: 0.6, wave: 1, specs: 0 }
-        : { x: 0, y: 0.3, h: 0.46, ry: 0, rx: 0, rz: 0, look: 0.6, wave: 1, specs: 0 }
+        ? { x: 0, y: 0.52, h: 0.26, ry: 0, rx: 0, rz: 0, look: 0.6, wave: 1, specs: 0, slot: 0 }
+        : { x: 0, y: 0.3, h: 0.46, ry: 0, rx: 0, rz: 0, look: 0.6, wave: 1, specs: 0, slot: 0 }
   }
 }
 

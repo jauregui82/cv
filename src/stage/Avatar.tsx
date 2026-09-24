@@ -17,23 +17,27 @@ import type { Variant } from '../hooks/useVariant'
 // static imports). BASE_URL is Vite's own env var for exactly this case.
 const MODEL_PATH = `${import.meta.env.BASE_URL}models/avatar.glb`
 
-// avatar.glb now ships a real baked PBR material (base color + normal +
-// metallic/roughness textures, matching the reference photo) instead of the
-// earlier geometry-only export. AvatarModel below uses that material as-is
-// rather than overwriting it — day/night is differentiated by Stage.tsx's
-// per-variant lighting only now, not by swapping the avatar's own color.
-// The sphere+capsule fallback has no UVs/texture of its own, so it still
-// needs a flat per-variant color - kept here for that case only.
+// avatar.glb ships a real baked PBR material (base color + normal + metallic/
+// roughness WebP textures) - AvatarModel uses that material as-is rather
+// than overwriting it (brief v2 §2: "No sobrescribas su material"). Day/
+// night is differentiated by Stage.tsx's per-variant lighting only, not by
+// swapping the avatar's own color. The fallback sphere has no UVs/texture of
+// its own, so it still needs a flat per-variant color - kept here for that
+// case only.
 const VARIANT_MATERIAL: Record<Variant, { color: string; roughness: number }> = {
   noche: { color: '#D9D3C7', roughness: 0.55 },
   dia: { color: '#2B43E0', roughness: 0.42 },
 }
 
-// Sphere+capsule fallback proportions/floor, matching mockup.html's
-// `placeholder()` closely enough that it reads as the same figure at the
-// same on-screen size as the real model.
-const FALLBACK_NATURAL_HEIGHT = 1.9
-const FALLBACK_FLOOR_LOCAL = -0.94
+// Brief v2 §2: the avatar is head-only now (no body/legs) - a single sphere
+// fallback replaces the old sphere+capsule pair. Scale (0.82, 1.08, 0.86)
+// per the brief, sphere radius 0.5 centered at the origin (matching how the
+// real head is Box3-centered) - floor is just that scaled sphere's bottom.
+const FALLBACK_SCALE: [number, number, number] = [0.82, 1.08, 0.86]
+const FALLBACK_SPHERE_RADIUS = 0.5
+// Brief v2 §2: "Altura natural: 0.98 (antes 1.9)."
+const FALLBACK_NATURAL_HEIGHT = 0.98
+const FALLBACK_FLOOR_LOCAL = -FALLBACK_SPHERE_RADIUS * FALLBACK_SCALE[1]
 
 interface AvatarProps {
   variant: Variant
@@ -72,10 +76,7 @@ class AvatarErrorBoundary extends Component<
   }
 
   componentDidCatch(error: unknown) {
-    console.error(
-      '[stage] avatar.glb failed to load, using sphere+capsule fallback',
-      error,
-    )
+    console.error('[stage] avatar.glb failed to load, using sphere fallback', error)
   }
 
   render() {
@@ -240,11 +241,8 @@ function AvatarFallback({ variant, transformRef, poseGroupRef }: AvatarBodyProps
   return (
     <group ref={poseGroupRef}>
       <group ref={spinGroupRef}>
-        <mesh position={[0, 0.38, 0]} scale={[1, 0.9, 0.95]} material={material}>
-          <sphereGeometry args={[0.5, 48, 32]} />
-        </mesh>
-        <mesh position={[0, -0.45, 0]} material={material}>
-          <capsuleGeometry args={[0.26, 0.45, 8, 24]} />
+        <mesh scale={FALLBACK_SCALE} material={material}>
+          <sphereGeometry args={[FALLBACK_SPHERE_RADIUS, 48, 32]} />
         </mesh>
       </group>
     </group>

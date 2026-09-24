@@ -136,6 +136,52 @@ export const avatarActionStore = {
 }
 
 /**
+ * DOM -> canvas bridge for the hero's `.o-slot` measurement (brief v2 §3).
+ * `Hero.tsx` writes the letter's live screen position on scroll/resize;
+ * `useScrollPose.ts` reads it each frame to compute the Hero pose. `cy` and
+ * `hp` are already the baseline-relative center Y and head-height in CSS
+ * px — `Hero.tsx` does that arithmetic itself, mirroring how `Work.tsx`
+ * bakes its own `AIM_OFFSET_PX` into `workTrackingStore` before writing.
+ */
+export interface HeroSlotSnapshot {
+  centerX: number | null
+  cy: number | null
+  hp: number | null
+}
+
+const heroSlotSnapshot: HeroSlotSnapshot = { centerX: null, cy: null, hp: null }
+
+export const heroSlotStore = {
+  getSnapshot(): Readonly<HeroSlotSnapshot> {
+    return heroSlotSnapshot
+  },
+
+  update(centerX: number, cy: number, hp: number) {
+    heroSlotSnapshot.centerX = centerX
+    heroSlotSnapshot.cy = cy
+    heroSlotSnapshot.hp = hp
+  },
+}
+
+/**
+ * Canvas -> DOM bridge for the real "o" glyph's opacity (brief v2 §3:
+ * `1 - min(1, slot*1.25)`, driven by the damped `slot` pose value).
+ * `layers.ts` writes it every frame; `Hero.tsx` reads it from its own rAF
+ * loop, same shape as `SpecLines.tsx`'s read of `specLinesStore`.
+ */
+const heroOSnapshot = { opacity: 1 }
+
+export const heroOStore = {
+  getSnapshot(): Readonly<typeof heroOSnapshot> {
+    return heroOSnapshot
+  },
+
+  update(opacity: number) {
+    heroOSnapshot.opacity = opacity
+  },
+}
+
+/**
  * Canvas -> DOM bridge for the speech bubble (`SpeechBubble.tsx`, brief
  * 4.4). `layers.ts` writes `headAnchor` every frame — the model-space head
  * point `(0.1, 0.98, 0)` (distinct from `SPEC_ANCHORS`'s Cerebro point)

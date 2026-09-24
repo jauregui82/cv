@@ -7,7 +7,7 @@ import {
   mixPose,
 } from './choreography'
 import type { Pose, PoseContext, SectionIndex } from './choreography'
-import { workTrackingStore } from './store'
+import { heroSlotStore, workTrackingStore } from './store'
 
 interface Measurements {
   /** `[rangeStart, rangeEnd]` per section, document-relative scrollY. */
@@ -56,6 +56,7 @@ const FALLBACK_POSE_CONTEXT: PoseContext = {
   mobile: false,
   p: 0,
   workY: null,
+  heroSlot: null,
   reducedMotion: false,
 }
 
@@ -101,7 +102,20 @@ export function useScrollPose(): ScrollPoseApi {
         ? 1 - 2 * (workSnapshot.activeScreenTop / viewportHeight)
         : null
 
-    const contextFor = (p: number): PoseContext => ({ mobile, p, workY, reducedMotion })
+    // Same -1..1/fraction-of-screen-height conversion as `workY` above,
+    // applied to the `.o-slot` measurement `Hero.tsx` writes on scroll/
+    // resize (brief v2 §3).
+    const slotSnapshot = heroSlotStore.getSnapshot()
+    const heroSlot =
+      slotSnapshot.centerX != null && slotSnapshot.cy != null && slotSnapshot.hp != null
+        ? {
+            x: (slotSnapshot.centerX / window.innerWidth) * 2 - 1,
+            y: 1 - (2 * slotSnapshot.cy) / viewportHeight,
+            h: slotSnapshot.hp / viewportHeight,
+          }
+        : null
+
+    const contextFor = (p: number): PoseContext => ({ mobile, p, workY, heroSlot, reducedMotion })
     const scrollY = window.scrollY
 
     for (let i = 0; i < ranges.length; i++) {

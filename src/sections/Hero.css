@@ -24,6 +24,19 @@
   font-style: normal;
 }
 
+/* The head sits here in the hero (brief v2 §3); `.base` is a 0×0 box whose
+   baseline gives the real font baseline position for the pose math. */
+.o-slot {
+  display: inline-block;
+}
+
+.o-slot .base {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  vertical-align: baseline;
+}
+
 :root[data-v='dia'] .hero .name .l2 {
   font-style: italic;
 }

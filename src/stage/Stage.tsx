@@ -10,15 +10,9 @@ import { createAvatarTransform, shadowBaseOpacity } from './layers'
 import type { AvatarTransform } from './layers'
 import './Stage.css'
 
-// Brief 3.1/3.2 light setup: amber key + blue rim from behind-right for
-// Noche, white key+rim for Día. Total intensity stays close to the ~1-1.5
-// this phase's brief asks for (mockup.html's raw intensities run much
-// hotter — ~5-6 combined — which reads fine there but blows out with r3f's
-// default, non "physically correct" light units). Ambient/hemisphere carry
-// more of the total than a literal ~1.5 split would give them: with only
-// two directional lights, faces outside their narrow angle read as flat
-// near-black and the pale Noche albedo (#D9D3C7) reads as muddy brown
-// instead of cream — see the report for the visual comparison.
+// Brief v2 §5 light setup (head-only avatar, real baked material - these
+// numbers run hotter than the v1 body's flat-color material needed, since
+// there's no flat albedo tint doing part of the work anymore).
 const VARIANT_LIGHTS: Record<
   Variant,
   {
@@ -29,16 +23,16 @@ const VARIANT_LIGHTS: Record<
   }
 > = {
   noche: {
-    ambient: 0.4,
-    key: { color: '#FFB547', intensity: 0.55 },
-    rim: { color: '#6E86FF', intensity: 0.35 },
-    hemi: 0.35,
+    ambient: 0.35,
+    key: { color: '#FFC47A', intensity: 2.1 },
+    rim: { color: '#6E86FF', intensity: 3.2 },
+    hemi: 0.45,
   },
   dia: {
-    ambient: 0.3,
-    key: { color: '#FFFFFF', intensity: 0.5 },
-    rim: { color: '#FFFFFF', intensity: 0.3 },
-    hemi: 0.25,
+    ambient: 0.7,
+    key: { color: '#FFFFFF', intensity: 1.7 },
+    rim: { color: '#BFD0FF', intensity: 1.4 },
+    hemi: 0.7,
   },
 }
 
@@ -128,7 +122,9 @@ function ContactShadow({ variant, transformRef }: ContactShadowProps) {
     mesh.position.set(transform.x, feetY, -0.2)
     mesh.scale.set(transform.scale * 1.25, transform.scale * 0.5, 1)
     const airborneFade = 1 - Math.min(0.7, transform.jumpHeight * 1.4)
-    ;(mesh.material as MeshBasicMaterial).opacity = shadowBaseOpacity(variant) * airborneFade
+    // No shadow while the head sits in the hero's letter slot (brief v2 §3).
+    ;(mesh.material as MeshBasicMaterial).opacity =
+      shadowBaseOpacity(variant) * airborneFade * (1 - transform.slot)
   })
 
   return (
