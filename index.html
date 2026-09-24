@@ -1,6 +1,21 @@
 <!doctype html>
 <html lang="es">
   <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-94E5Y9Q8EG"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      // Skip sending real pageviews from localhost/dev builds - otherwise
+      // every `npm run dev` session shows up as live traffic in Analytics.
+      if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+        gtag('config', 'G-94E5Y9Q8EG');
+      }
+    </script>
+
     <script>
       // Set the "Noche"/"Día" variant on <html> synchronously, before any
       // stylesheet applies, so there is no flash of the wrong variant.
