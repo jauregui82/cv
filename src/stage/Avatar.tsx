@@ -13,8 +13,13 @@ import type { Variant } from '../hooks/useVariant'
 
 const MODEL_PATH = '/models/avatar.glb'
 
-// Brief 3.1/3.2: material per variant. Metalness isn't specified in the
-// brief tables — kept at mockup.html's 0.05 for both.
+// avatar.glb now ships a real baked PBR material (base color + normal +
+// metallic/roughness textures, matching the reference photo) instead of the
+// earlier geometry-only export. AvatarModel below uses that material as-is
+// rather than overwriting it — day/night is differentiated by Stage.tsx's
+// per-variant lighting only now, not by swapping the avatar's own color.
+// The sphere+capsule fallback has no UVs/texture of its own, so it still
+// needs a flat per-variant color - kept here for that case only.
 const VARIANT_MATERIAL: Record<Variant, { color: string; roughness: number }> = {
   noche: { color: '#D9D3C7', roughness: 0.55 },
   dia: { color: '#2B43E0', roughness: 0.42 },
@@ -159,20 +164,22 @@ function useVariantMaterial(variant: Variant) {
   return material
 }
 
-function AvatarModel({ variant, transformRef, poseGroupRef }: AvatarBodyProps) {
+function AvatarModel({ transformRef, poseGroupRef }: AvatarBodyProps) {
   const { scene } = useGLTF(MODEL_PATH)
   const spinGroupRef = useRef<Group>(null)
   const reducedMotion = useReducedMotion()
-  const material = useVariantMaterial(variant)
   const scrollPose = useScrollPose()
 
-  // avatar.glb carries POSITION only (no normals/UVs/materials/skeleton, per
-  // glTF inspection) — normals must be computed after load or lighting is
-  // flat/wrong (brief 4.5). Centering via Box3 mirrors mockup.html. Runs
-  // once per loaded scene, independent of the variant material below.
+  // avatar.glb now ships its own real material (baseColor/normal/metallic-
+  // roughness textures baked in) - use it as-is, don't overwrite it. Only
+  // compute normals ourselves if a given export happens to lack them
+  // (defensive - true for earlier geometry-only exports, brief 4.5).
+  // Centering via Box3 mirrors mockup.html. Runs once per loaded scene.
   const { naturalHeight, floorLocal } = useMemo(() => {
     scene.traverse((child) => {
-      if (child instanceof Mesh) child.geometry.computeVertexNormals()
+      if (child instanceof Mesh && !child.geometry.getAttribute('normal')) {
+        child.geometry.computeVertexNormals()
+      }
     })
 
     const box = new Box3().setFromObject(scene)
@@ -185,12 +192,6 @@ function AvatarModel({ variant, transformRef, poseGroupRef }: AvatarBodyProps) {
       floorLocal: box.min.y - center.y,
     }
   }, [scene])
-
-  useEffect(() => {
-    scene.traverse((child) => {
-      if (child instanceof Mesh) child.material = material
-    })
-  }, [scene, material])
 
   useAvatarPoseFrame({
     poseGroupRef,
