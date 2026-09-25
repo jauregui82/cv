@@ -81,10 +81,6 @@
   display: none;
 }
 
-.email-visible {
-  display: none;
-}
-
 .cv-desktop {
   display: contents;
 }
@@ -150,11 +146,6 @@
 
   .row-location {
     order: 3;
-  }
-
-  .email-visible {
-    display: block;
-    user-select: all;
   }
 
   .cv-desktop {

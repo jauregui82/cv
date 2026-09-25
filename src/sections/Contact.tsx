@@ -97,7 +97,6 @@ export function Contact() {
         <div className="rows">
           <div className="row-email">
             <span className="mono">{contact.emailLabel}</span>
-            <span className="val email-visible">{contact.email}</span>
             <button type="button" className="copy" title={contact.email} onClick={handleCopy}>
               {copied ? contact.copiedLabel : contact.copyLabel}
             </button>

@@ -93,8 +93,21 @@
 
 @media (max-width: 760px) {
   .hero {
-    grid-template-rows: auto 1fr auto;
+    /* `.hero` only has 2 children (`.name`, `.foot`) — a 3rd "auto 1fr auto"
+       row here was landing `.foot` in the middle 1fr track (auto-placement
+       has no 3rd child to give the last row to), stretching it tall with a
+       big empty gap below its actual content instead of the name/foot
+       staying centered/pinned like the 2-row desktop template already does. */
     container-type: inline-size;
+  }
+
+  /* Left-aligned on mobile (mockup-mobile.html), not the centered desktop
+     treatment — also keeps the head/speech-bubble on "Crespo"'s own line
+     clear of "Jauregui" above it, which centering pulled into the same
+     horizontal territory. */
+  .hero .name {
+    justify-items: start;
+    text-align: left;
   }
 
   .hero .name .display {

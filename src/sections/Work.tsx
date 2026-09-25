@@ -101,29 +101,29 @@ export function Work() {
           <h2 className="display">{work.title}</h2>
         </Reveal>
 
-        <Reveal delay={0.1}>
-          <ol className="jobs">
-            {work.jobs.map((job, index) => (
-              <li
-                className={`job${index === activeIndex ? ' active' : ''}`}
-                key={job.company}
-                ref={(el) => {
-                  jobRefs.current[index] = el
-                }}
-              >
-                <span className="mono yr">{job.years}</span>
-                <div>
-                  <div className="jrow">
-                    <h3>{job.company}</h3>
-                    <span className="jslot" aria-hidden="true" />
-                  </div>
-                  <div className="role">{job.role}</div>
-                  <p>{job.description}</p>
+        <ol className="jobs">
+          {work.jobs.map((job, index) => (
+            <Reveal
+              as="li"
+              className={`job${index === activeIndex ? ' active' : ''}`}
+              key={job.company}
+              delay={Math.min(index * 0.03, 0.15)}
+              ref={(el) => {
+                jobRefs.current[index] = el as HTMLLIElement | null
+              }}
+            >
+              <span className="mono yr">{job.years}</span>
+              <div>
+                <div className="jrow">
+                  <h3>{job.company}</h3>
+                  <span className="jslot" aria-hidden="true" />
                 </div>
-              </li>
-            ))}
-          </ol>
-        </Reveal>
+                <div className="role">{job.role}</div>
+                <p>{job.description}</p>
+              </div>
+            </Reveal>
+          ))}
+        </ol>
 
         <Reveal delay={0.15}>
           <div className="edu">
