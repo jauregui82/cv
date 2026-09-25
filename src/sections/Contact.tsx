@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useLanguage } from '../hooks/useLanguage'
 import { Reveal } from '../components/Reveal'
+import { trackEvent } from '../lib/analytics'
 import { mobileSlotStore } from '../stage/store'
 import './Contact.css'
 
@@ -78,9 +79,14 @@ export function Contact() {
     } catch {
       // Clipboard API unavailable — the email is still visible as text.
     }
+    trackEvent('email_copy')
     setCopied(true)
     clearTimeout(timeoutRef.current)
     timeoutRef.current = setTimeout(() => setCopied(false), 1600)
+  }
+
+  function handleCvDownload(language: 'es' | 'en') {
+    trackEvent('cv_download', { language })
   }
 
   return (
@@ -128,10 +134,24 @@ export function Contact() {
                     exit={reduceMotion ? undefined : { opacity: 0, y: -6, scale: 0.96 }}
                     transition={{ type: 'spring', bounce: 0, duration: 0.3 }}
                   >
-                    <a href={CV_FILES.es.href} download={CV_FILES.es.filename} onClick={() => setCvOpen(false)}>
+                    <a
+                      href={CV_FILES.es.href}
+                      download={CV_FILES.es.filename}
+                      onClick={() => {
+                        handleCvDownload('es')
+                        setCvOpen(false)
+                      }}
+                    >
                       {contact.cvOptionEs}
                     </a>
-                    <a href={CV_FILES.en.href} download={CV_FILES.en.filename} onClick={() => setCvOpen(false)}>
+                    <a
+                      href={CV_FILES.en.href}
+                      download={CV_FILES.en.filename}
+                      onClick={() => {
+                        handleCvDownload('en')
+                        setCvOpen(false)
+                      }}
+                    >
                       {contact.cvOptionEn}
                     </a>
                   </motion.div>
@@ -139,10 +159,20 @@ export function Contact() {
               </AnimatePresence>
             </div>
             <div className="cv-mobile">
-              <a className="btn primary" href={CV_FILES.es.href} download={CV_FILES.es.filename}>
+              <a
+                className="btn primary"
+                href={CV_FILES.es.href}
+                download={CV_FILES.es.filename}
+                onClick={() => handleCvDownload('es')}
+              >
                 {contact.cvOptionEsShort}
               </a>
-              <a className="btn" href={CV_FILES.en.href} download={CV_FILES.en.filename}>
+              <a
+                className="btn"
+                href={CV_FILES.en.href}
+                download={CV_FILES.en.filename}
+                onClick={() => handleCvDownload('en')}
+              >
                 {contact.cvOptionEnShort}
               </a>
             </div>

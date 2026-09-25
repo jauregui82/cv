@@ -10,6 +10,7 @@ import type { AvatarTransform } from './layers'
 import { useScrollPose } from './useScrollPose'
 import { MOBILE_BREAKPOINT } from './choreography'
 import { avatarActionStore, avatarHeadStore } from './store'
+import { trackEvent } from '../lib/analytics'
 import type { Variant } from '../hooks/useVariant'
 
 // Runtime string, not a build-time import - Vite's `base` rewriting (needed
@@ -151,6 +152,7 @@ function AvatarTapListener({ poseGroupRef }: AvatarTapListenerProps) {
         const radius = Math.max(MOBILE_TAP_MIN_RADIUS_PX, hFraction * window.innerHeight * MOBILE_TAP_RADIUS_HEIGHT_FACTOR)
         if (Math.hypot(event.clientX - headAnchor[0], event.clientY - headAnchor[1]) < radius) {
           avatarActionStore.triggerPoke()
+          trackEvent('avatar_interaction', { method: 'touch' })
         }
         return
       }
@@ -163,6 +165,7 @@ function AvatarTapListener({ poseGroupRef }: AvatarTapListenerProps) {
       raycaster.setFromCamera(ndc, camera)
       if (raycaster.intersectObject(group, true).length > 0) {
         avatarActionStore.triggerPoke()
+        trackEvent('avatar_interaction', { method: 'click' })
       }
     }
 
