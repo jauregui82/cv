@@ -239,10 +239,12 @@ export function useAvatarPoseFrame({
     const group = poseGroupRef.current
     if (!group) return
 
-    const { pose: targetPose, dominant, p } = scrollPose.getTargetPose(reducedMotion)
+    const { pose: targetPose, dominant, p, mobile } = scrollPose.getTargetPose(reducedMotion)
 
     const current = currentPoseRef.current
-    const k = 1 - Math.exp(-delta * 7)
+    // Mobile brief §2.1: a slightly faster damping (9 vs 7) so the head
+    // doesn't lag behind its slot while scrolling.
+    const k = 1 - Math.exp(-delta * (mobile ? 9 : 7))
     for (const key of POSE_KEYS) {
       current[key] += (targetPose[key] - current[key]) * k
     }

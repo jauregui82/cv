@@ -2,12 +2,17 @@ import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useLanguage } from '../hooks/useLanguage'
 import { Reveal } from '../components/Reveal'
+import { mobileSlotStore } from '../stage/store'
 import './Contact.css'
 
 const CV_FILES = {
   es: { href: `${import.meta.env.BASE_URL}cv/cv-es.pdf`, filename: 'Jauregui-Crespo-CV-ES.pdf' },
   en: { href: `${import.meta.env.BASE_URL}cv/cv-en.pdf`, filename: 'Jauregui-Crespo-CV-EN.pdf' },
 }
+
+// Mobile brief §3: the head measures 148px in the Contact slot — a fixed
+// head-height, not the 150×150 CSS box's own rendered size.
+const CONTACT_SLOT_HEAD_HEIGHT_PX = 148
 
 export function Contact() {
   const { content } = useLanguage()
@@ -17,8 +22,39 @@ export function Contact() {
   const [cvOpen, setCvOpen] = useState(false)
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
   const cvRef = useRef<HTMLDivElement>(null)
+  const slotRef = useRef<HTMLSpanElement>(null)
 
   useEffect(() => () => clearTimeout(timeoutRef.current), [])
+
+  // Mobile brief §2.1: live screen position of `.cslot` for
+  // `useScrollPose.ts`'s slot-or-dock mix — same rAF-scheduled scroll/resize
+  // pattern as `Hero.tsx`'s `.o-slot` measurement.
+  useEffect(() => {
+    let pendingFrame = 0
+
+    function measure() {
+      pendingFrame = 0
+      const slot = slotRef.current
+      if (!slot) return
+      const rect = slot.getBoundingClientRect()
+      mobileSlotStore.update('contact', rect.left + rect.width / 2, rect.top + rect.height / 2, CONTACT_SLOT_HEAD_HEIGHT_PX)
+    }
+
+    function scheduleMeasure() {
+      if (pendingFrame) return
+      pendingFrame = requestAnimationFrame(measure)
+    }
+
+    measure()
+    window.addEventListener('scroll', scheduleMeasure, { passive: true })
+    window.addEventListener('resize', scheduleMeasure)
+
+    return () => {
+      if (pendingFrame) cancelAnimationFrame(pendingFrame)
+      window.removeEventListener('scroll', scheduleMeasure)
+      window.removeEventListener('resize', scheduleMeasure)
+    }
+  }, [])
 
   useEffect(() => {
     if (!cvOpen) return
@@ -49,7 +85,7 @@ export function Contact() {
 
   return (
     <section id="contact" className="contact wrap">
-      <span className="cslot" aria-hidden="true" />
+      <span className="cslot" ref={slotRef} aria-hidden="true" />
       <Reveal>
         <h2 className="display">
           {contact.titleLine1}

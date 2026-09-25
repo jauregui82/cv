@@ -201,6 +201,43 @@ export const heroOStore = {
 }
 
 /**
+ * DOM -> canvas bridge for the mobile brief's slots + dock (§2.1): each
+ * named slot writes its live screen-space center + a fixed head-height on
+ * scroll/resize, same shape and rationale as `heroSlotStore` above, just one
+ * store shared across every mobile slot instead of a dedicated one per
+ * section. `dock` is the header's `<span class="dock">` (`Header.tsx`);
+ * `work`'s measurement is written (and cleared back to nulls) by
+ * `Work.tsx`'s existing active-job tracking effect, since that slot only
+ * exists while some job is active.
+ */
+export type MobileSlotId = 'about' | 'work' | 'contact' | 'dock'
+
+export interface MobileSlotSnapshot {
+  centerX: number | null
+  cy: number | null
+  hp: number | null
+}
+
+const EMPTY_MOBILE_SLOT: MobileSlotSnapshot = { centerX: null, cy: null, hp: null }
+
+const mobileSlots: Record<MobileSlotId, MobileSlotSnapshot> = {
+  about: { ...EMPTY_MOBILE_SLOT },
+  work: { ...EMPTY_MOBILE_SLOT },
+  contact: { ...EMPTY_MOBILE_SLOT },
+  dock: { ...EMPTY_MOBILE_SLOT },
+}
+
+export const mobileSlotStore = {
+  getSnapshot(id: MobileSlotId): Readonly<MobileSlotSnapshot> {
+    return mobileSlots[id]
+  },
+
+  update(id: MobileSlotId, centerX: number | null, cy: number | null, hp: number | null) {
+    mobileSlots[id] = { centerX, cy, hp }
+  },
+}
+
+/**
  * Canvas -> DOM bridge for the speech bubble (`SpeechBubble.tsx`, brief
  * 4.4). `layers.ts` writes `headAnchor` every frame — the model-space head
  * point `(0.1, 0.98, 0)` (distinct from `SPEC_ANCHORS`'s Cerebro point)

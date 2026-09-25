@@ -88,6 +88,12 @@ nav.links a:hover {
 }
 
 @media (max-width: 760px) {
+  /* Mobile brief §2.1: canvas (z-index 5, Stage.css) paints above the
+     header so the head visibly sits inside the dock. */
+  .site-header {
+    z-index: 4;
+  }
+
   nav.links {
     display: none;
   }

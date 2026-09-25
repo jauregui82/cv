@@ -64,9 +64,13 @@ export interface PoseContext {
    * screen position (brief v2 §3) — `null` before the first measurement. */
   heroSlot: { x: number; y: number; h: number } | null
   reducedMotion: boolean
+  /** Mobile brief §2 "slots + dock": each section's live pose resolved from
+   * its DOM slot (mixed toward the header dock once it scrolls close under
+   * it), or `null` before first measurement / on desktop. */
+  mobilePose: { hero: Pose | null; about: Pose | null; work: Pose | null; contact: Pose | null } | null
 }
 
-function clamp(value: number, min: number, max: number): number {
+export function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value))
 }
 
@@ -78,22 +82,36 @@ function clamp(value: number, min: number, max: number): number {
  * `src/sections/Work.tsx` via `store.ts`.
  */
 export function basePose(section: SectionIndex, ctx: PoseContext): Pose {
-  const { mobile, p, workY, heroSlot, reducedMotion } = ctx
+  const { mobile, p, workY, heroSlot, reducedMotion, mobilePose } = ctx
 
   switch (section) {
-    // Hero: the head sits on the last "o" of "Crespo" (brief v2 §3), same
-    // pose on desktop and mobile — no static table row anymore. Falls back
-    // to the pre-v2 desktop values (INITIAL_DISPLAY_POSE) for the first
-    // frame or two before `.o-slot` has been measured.
+    // Hero: the head sits on the last "o" of "Crespo" (brief v2 §3). On
+    // mobile it also docks into the header once the "o" scrolls close under
+    // it (mobile brief §2) — `mobilePose.hero` already carries that mix.
     case 0:
+      if (mobile && mobilePose?.hero) return mobilePose.hero
       return heroSlot
         ? { x: heroSlot.x, y: heroSlot.y, h: heroSlot.h, ry: 0, rx: 0, rz: 0, look: 1, wave: 0, specs: 0, slot: 1 }
         : { ...INITIAL_DISPLAY_POSE, slot: 1 }
 
     case 1: // About — curious head tilt; rx dips as you read (rx = -0.1 + p*0.42)
-      return mobile
-        ? { x: 1.0, y: -0.45, h: 0.24, ry: -0.85, rx: 0.05, rz: 0.22, look: 0.4, wave: 0, specs: 0, slot: 0 }
-        : { x: -0.58, y: 0, h: 0.5, ry: 0.55, rx: -0.1 + p * 0.42, rz: -0.14, look: 0.35, wave: 0, specs: 0, slot: 0 }
+      if (mobile) {
+        return (
+          mobilePose?.about ?? {
+            x: 1.0,
+            y: -0.45,
+            h: 0.24,
+            ry: -0.85,
+            rx: 0.05,
+            rz: 0.22,
+            look: 0.4,
+            wave: 0,
+            specs: 0,
+            slot: 0,
+          }
+        )
+      }
+      return { x: -0.58, y: 0, h: 0.5, ry: 0.55, rx: -0.1 + p * 0.42, rz: -0.14, look: 0.35, wave: 0, specs: 0, slot: 0 }
 
     case 2: // Specs / Stack
       return {
@@ -110,14 +128,32 @@ export function basePose(section: SectionIndex, ctx: PoseContext): Pose {
       }
 
     case 3: { // Work / Trayectoria — y tracks the active job (see workY above)
+      if (mobile) {
+        const y = clamp(workY ?? 0, -0.6, 0.4)
+        return (
+          mobilePose?.work ?? {
+            x: 1.0,
+            y,
+            h: 0.2,
+            ry: -0.85,
+            rx: 0.05,
+            rz: 0.2,
+            look: 0.3,
+            wave: 0,
+            specs: 0,
+            slot: 0,
+          }
+        )
+      }
       const y = clamp(workY ?? 0, -0.6, 0.55)
-      return mobile
-        ? { x: 1.0, y: clamp(y, -0.6, 0.4), h: 0.2, ry: -0.85, rx: 0.05, rz: 0.2, look: 0.3, wave: 0, specs: 0, slot: 0 }
-        : { x: -0.64, y: y - 0.04, h: 0.26, ry: 0.75, rx: 0.08, rz: -0.06, look: 0.3, wave: 0, specs: 0, slot: 0 }
+      return { x: -0.64, y: y - 0.04, h: 0.26, ry: 0.75, rx: 0.08, rz: -0.06, look: 0.3, wave: 0, specs: 0, slot: 0 }
     }
 
     case 4: // Contact
-      return { x: 0, y: 0.5, h: mobile ? 0.22 : 0.3, ry: 0, rx: 0, rz: 0, look: 0.6, wave: 1, specs: 0, slot: 0 }
+      if (mobile) {
+        return mobilePose?.contact ?? { x: 0, y: 0.5, h: 0.22, ry: 0, rx: 0, rz: 0, look: 0.6, wave: 1, specs: 0, slot: 0 }
+      }
+      return { x: 0, y: 0.5, h: 0.3, ry: 0, rx: 0, rz: 0, look: 0.6, wave: 1, specs: 0, slot: 0 }
   }
 }
 

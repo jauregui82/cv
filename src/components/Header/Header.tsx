@@ -1,7 +1,8 @@
+import { useEffect, useRef } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { useLanguage } from '../../hooks/useLanguage'
 import { useVariant } from '../../hooks/useVariant'
-import { avatarActionStore } from '../../stage/store'
+import { avatarActionStore, mobileSlotStore } from '../../stage/store'
 import type { Language } from '../../content'
 import './Header.css'
 
@@ -16,6 +17,26 @@ export function Header() {
   const { variant, setVariant } = useVariant()
   const reducedMotion = useReducedMotion()
   const { nav, header } = content
+  const dockRef = useRef<HTMLSpanElement>(null)
+
+  // Mobile brief §2.1: the dock's screen position for `useScrollPose.ts`'s
+  // slot-or-dock mix. The header is `position: fixed`, so unlike the other
+  // slots this one doesn't move on scroll — only resize/fonts affect it.
+  useEffect(() => {
+    function measure() {
+      const dock = dockRef.current
+      if (!dock) return
+      const rect = dock.getBoundingClientRect()
+      mobileSlotStore.update('dock', rect.left + rect.width / 2, rect.top + rect.height / 2, rect.height)
+    }
+
+    measure()
+    window.addEventListener('resize', measure)
+    const fontsReady = (document as Document & { fonts?: FontFaceSet }).fonts?.ready
+    fontsReady?.then(measure)
+
+    return () => window.removeEventListener('resize', measure)
+  }, [])
 
   // Brief 4.3: under prefers-reduced-motion the language must still change
   // — it's core functionality, not decoration — just without the physical
@@ -43,7 +64,7 @@ export function Header() {
           jau<b>.</b>
         </a>
 
-        <span className="dock" aria-hidden="true" />
+        <span className="dock" ref={dockRef} aria-hidden="true" />
 
         <nav className="links" aria-label={header.navGroupLabel}>
           <a href="#about">{nav.about}</a>
