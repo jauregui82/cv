@@ -7,6 +7,7 @@ import type { Variant } from '../hooks/useVariant'
 import {
   INITIAL_DISPLAY_POSE,
   POSE_KEYS,
+  SPECS_SECTION_INDEX,
   WORK_SECTION_INDEX,
   easeInOutCubic,
 } from './choreography'
@@ -345,13 +346,19 @@ export function useAvatarPoseFrame({
         Math.max(0, Math.sin(clock * CONTACT_YES_BURST_FREQUENCY))
       : 0
 
+    // Mobile brief §3.1: a light sway while a Stack part is shown — off for
+    // reduced motion, and only while Specs is actually the dominant section
+    // (not mid-blend into/out of it).
+    const specsWobble =
+      !reducedMotion && mobile && dominant === SPECS_SECTION_INDEX ? Math.sin(clock * 0.8) * 0.06 : 0
+
     group.position.set(worldX, worldY, 0)
     group.scale.set(
       scale * breathe * (1 + squash),
       scale * breathe * (1 - squash),
       scale * breathe * (1 + squash),
     )
-    group.rotation.set(current.rx + rx + contactYesRx + nodRx, current.ry + ry, current.rz)
+    group.rotation.set(current.rx + rx + contactYesRx + nodRx, current.ry + ry + specsWobble, current.rz)
 
     const transform = transformRef.current
     transform.x = worldX

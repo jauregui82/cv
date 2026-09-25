@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { MOBILE_BREAKPOINT, SPECS_SECTION_INDEX } from './choreography'
+import { MOBILE_BREAKPOINT, SPECS_SECTION_INDEX, specPartIndex } from './choreography'
 import { specLinesStore } from './store'
 import './SpecLines.css'
 
@@ -35,19 +35,21 @@ export function SpecLines() {
   const pathRefs = useRef<(SVGPathElement | null)[]>([])
   const circleRefs = useRef<(SVGCircleElement | null)[]>([])
   const calloutsRef = useRef<CalloutRef[]>([])
+  const cardRef = useRef<HTMLElement | null>(null)
   const mobileRef = useRef(window.innerWidth < MOBILE_BREAKPOINT)
 
-  // Re-finds the `.specs__callout` DOM nodes on resize/fonts-ready, mirroring
-  // useScrollPose.ts's own `measure()` precedent of querying the DOM
-  // directly rather than threading refs across the Stage/Specs component
-  // boundary (SpecLines and Specs.tsx aren't parent/child — both are
-  // siblings of `<main>` in App.tsx).
+  // Re-finds the `.specs__callout`/`.specs__mobile-card` DOM nodes on
+  // resize/fonts-ready, mirroring useScrollPose.ts's own `measure()`
+  // precedent of querying the DOM directly rather than threading refs across
+  // the Stage/Specs component boundary (SpecLines and Specs.tsx aren't
+  // parent/child — both are siblings of `<main>` in App.tsx).
   useEffect(() => {
     function remeasure() {
       mobileRef.current = window.innerWidth < MOBILE_BREAKPOINT
       calloutsRef.current = Array.from(
         document.querySelectorAll<HTMLElement>('.specs__callout'),
       ).map((el) => ({ el, left: el.classList.contains('l') }))
+      cardRef.current = document.querySelector('.specs__mobile-card')
     }
     remeasure()
 
@@ -72,6 +74,37 @@ export function SpecLines() {
       circleRefs.current[index]?.setAttribute('opacity', '0')
     }
 
+    // Mobile brief §3: a single line from the active part's anchor to the
+    // top edge of the card, instead of one line per tag (there's only ever
+    // one tag showing). Reuses `path`/`circle` index 0 and clears the rest.
+    function loopMobile(snapshot: ReturnType<typeof specLinesStore.getSnapshot>) {
+      const path = pathRefs.current[0]
+      const circle = circleRefs.current[0]
+      const card = cardRef.current
+      const idx = specPartIndex(snapshot.p)
+      const anchor = snapshot.anchors[idx]
+      const on = snapshot.dominant === SPECS_SECTION_INDEX && snapshot.opacity > 0.05
+
+      for (let i = 1; i < TAG_COUNT; i++) clearMark(i)
+      calloutsRef.current.forEach((c) => c.el.classList.remove('on'))
+
+      if (!on || !path || !circle || !card || !anchor) {
+        clearMark(0)
+        return
+      }
+
+      const [ax, ay] = anchor
+      const rect = card.getBoundingClientRect()
+      const cx = Math.min(rect.right - 12, Math.max(rect.left + 12, ax))
+      const lineOpacity = (snapshot.lineOpacities[idx] ?? snapshot.opacity).toFixed(2)
+
+      path.setAttribute('d', `M${ax},${ay} L${cx},${rect.top - 10} L${cx},${rect.top}`)
+      path.setAttribute('opacity', lineOpacity)
+      circle.setAttribute('cx', String(ax))
+      circle.setAttribute('cy', String(ay))
+      circle.setAttribute('opacity', lineOpacity)
+    }
+
     function loop() {
       frameId = requestAnimationFrame(loop)
 
@@ -84,6 +117,11 @@ export function SpecLines() {
           callouts[i].el.classList.remove('on')
           clearMark(i)
         }
+        return
+      }
+
+      if (mobile) {
+        loopMobile(snapshot)
         return
       }
 
@@ -105,24 +143,11 @@ export function SpecLines() {
         const rect = callout.el.getBoundingClientRect()
 
         // Elbow geometry ported from mockup.html's `frame()` — a straight
-        // 28px "codo" out from the tag, then a diagonal down to the anchor
-        // (desktop); on mobile a short 10px stub up from the tag's top-left
-        // instead (brief 5.4: "líneas que salen desde arriba").
-        let lx: number
-        let ly: number
-        let ex: number
-        let ey: number
-        if (mobile) {
-          lx = rect.left + 4
-          ex = lx
-          ly = rect.top - 4
-          ey = ly - 10
-        } else {
-          lx = callout.left ? rect.right + 12 : rect.left - 12
-          ly = rect.top + 10
-          ex = callout.left ? lx + 28 : lx - 28
-          ey = ly
-        }
+        // 28px "codo" out from the tag, then a diagonal down to the anchor.
+        const lx = callout.left ? rect.right + 12 : rect.left - 12
+        const ly = rect.top + 10
+        const ex = callout.left ? lx + 28 : lx - 28
+        const ey = ly
 
         // Brief v2 §6: per-anchor opacity, not the shared `snapshot.opacity`
         // — a line dims (never fully vanishes) once its anchor turns away

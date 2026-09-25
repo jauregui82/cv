@@ -150,6 +150,24 @@ function resolveSlotPose(
 }
 
 /**
+ * Mobile brief §3: the Stack slot's plain x/y/h, no dock mixing — the head
+ * stays pinned in `.sslot` for the whole sticky section rather than leaving
+ * for the header while scrolled through it.
+ */
+function specsSlotPose(
+  slot: MobileSlotSnapshot,
+  viewportWidth: number,
+  viewportHeight: number,
+): { x: number; y: number; h: number } | null {
+  if (slot.centerX == null || slot.cy == null || slot.hp == null) return null
+  return {
+    x: (slot.centerX / viewportWidth) * 2 - 1,
+    y: 1 - (2 * slot.cy) / viewportHeight,
+    h: slot.hp / viewportHeight,
+  }
+}
+
+/**
  * Scroll-driven target pose (brief 4.2 + mockup.html's `targetPose()`): the
  * held pose for whichever section range the current scroll position falls
  * in, or an `easeInOutCubic` blend across the gap between two sections.
@@ -235,6 +253,7 @@ export function useScrollPose(): ScrollPoseApi {
             viewportHeight,
             { wave: 1, look: 0.6 },
           ),
+          specs: specsSlotPose(mobileSlotStore.getSnapshot('specs'), viewportWidth, viewportHeight),
         }
       : null
 

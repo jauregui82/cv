@@ -95,26 +95,16 @@
   display: none;
 }
 
+.sslot,
+.specs__mobile-card {
+  display: none;
+}
+
 @media (max-width: 760px) {
+  /* Mobile brief §3: the 5-tag callouts grid is replaced by a single square
+     slot + one card at a time (below), not shown together. */
   .specs__callouts {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-content: end;
-    gap: 14px 16px;
-    padding-bottom: 8px;
-  }
-
-  .specs__callout {
-    position: static;
-    width: auto;
-  }
-
-  .specs__callout.r {
-    text-align: left;
-  }
-
-  .specs__callout p {
-    font-size: 0.86rem;
+    display: none;
   }
 
   .specs__tail--inside {
@@ -125,5 +115,71 @@
     display: block;
     padding-top: 28px;
     padding-bottom: 12px;
+  }
+
+  .sslot {
+    display: block;
+    grid-row: 2;
+    justify-self: center;
+    align-self: center;
+    width: min(270px, 34vh);
+    height: min(270px, 34vh);
+  }
+
+  .specs__mobile-card {
+    display: grid;
+    grid-row: 3;
+    gap: 8px;
+    min-height: 132px;
+    border-top: 1px solid var(--line);
+    padding-top: 14px;
+  }
+
+  .specs__mobile-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .specs__mobile-label {
+    color: var(--accent);
+    transition: opacity 0.18s ease;
+  }
+
+  .specs__mobile-label.swap {
+    opacity: 0;
+  }
+
+  .specs__mobile-count {
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .specs__mobile-text {
+    margin: 0;
+    font-size: 1.18rem;
+    line-height: 1.35;
+    transition: opacity 0.18s ease;
+  }
+
+  .specs__mobile-text.swap {
+    opacity: 0;
+  }
+
+  .specs__mobile-bars {
+    display: flex;
+    gap: 6px;
+  }
+
+  .specs__mobile-bars i {
+    width: 18px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--line);
+    transition: background 0.3s;
+  }
+
+  .specs__mobile-bars i.on {
+    background: var(--accent);
   }
 }

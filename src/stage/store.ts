@@ -208,9 +208,12 @@ export const heroOStore = {
  * section. `dock` is the header's `<span class="dock">` (`Header.tsx`);
  * `work`'s measurement is written (and cleared back to nulls) by
  * `Work.tsx`'s existing active-job tracking effect, since that slot only
- * exists while some job is active.
+ * exists while some job is active. `specs` (Stack, mobile brief §3) is
+ * resolved differently downstream — it never mixes toward the dock, since
+ * the head stays in the sticky-pinned slot for the whole section instead of
+ * leaving when it scrolls near the header.
  */
-export type MobileSlotId = 'about' | 'work' | 'contact' | 'dock'
+export type MobileSlotId = 'about' | 'work' | 'contact' | 'dock' | 'specs'
 
 export interface MobileSlotSnapshot {
   centerX: number | null
@@ -225,6 +228,7 @@ const mobileSlots: Record<MobileSlotId, MobileSlotSnapshot> = {
   work: { ...EMPTY_MOBILE_SLOT },
   contact: { ...EMPTY_MOBILE_SLOT },
   dock: { ...EMPTY_MOBILE_SLOT },
+  specs: { ...EMPTY_MOBILE_SLOT },
 }
 
 export const mobileSlotStore = {
