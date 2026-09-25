@@ -25,7 +25,7 @@
   },
   "about": {
     "kicker": "Sobre mí",
-    "title": "Seis años convirtiendo diseños en producto.",
+    "title": "Más de 9 años convirtiendo diseños en producto.",
     "paragraphs": [
       "Soy Front-End Engineer, nacido en Venezuela y radicado en Santiago de Chile. Me especializo en React, Next.js y TypeScript, con foco en arquitectura UI, rendimiento y código mantenible.",
       "He construido el ciclo completo de retiro en tienda para Cencosud, trabajado en productos internacionales como SoundExchange, Whitepages y Campomar, creado librerías UI internas publicadas en AWS CodeArtifact y migrado front-ends legacy a React + Redux."
@@ -33,11 +33,11 @@
     "stats": [
       {
         "label": "años en front-end",
-        "value": "6+"
+        "value": "9+"
       },
       {
         "label": "equipos y clientes",
-        "value": "7"
+        "value": "11+"
       },
       {
         "label": "países · VE · PE · CL",
@@ -80,16 +80,22 @@
     "title": "Dónde he construido.",
     "jobs": [
       {
-        "years": "2023 — Hoy",
-        "company": "LVA Indices",
-        "role": "Frontend Developer · Santiago",
-        "description": "Plataformas financieras con React, Next.js y TypeScript. Librería UI interna y optimización de pipelines CI/CD en AWS."
-      },
-      {
         "years": "2022 — Hoy",
         "company": "Freelance",
         "role": "Front-End Developer · Remoto",
         "description": "Athenaworks (SoundExchange, Whitepages) y Aurica, broker de metales preciosos líder en Chile."
+      },
+      {
+        "years": "2026 — Hoy",
+        "company": "Variacode",
+        "role": "Software Engineer ·  cliente: PagerDuty",
+        "description": "Desarrollo full stack para Catalytic y Rundeck, con foco en frontend, más guardias on-call 24/7 en Catalytic para garantizar la estabilidad del producto en producción."
+      },
+      {
+        "years": "2023 — 2026",
+        "company": "LVA Indices",
+        "role": "Frontend Developer · Santiago",
+        "description": "Plataformas financieras con React, Next.js y TypeScript. Librería UI interna y optimización de pipelines CI/CD en AWS."
       },
       {
         "years": "2021 — 2023",
@@ -146,7 +152,7 @@
     "copyLabel": "Copiar email",
     "copiedLabel": "Copiado",
     "locationLabel": "Desde",
-    "locationValue": "Santiago de Chile — abierto a remoto"
+    "locationValue": "Santiago de Chile — 100% remoto"
   },
   "speech": {
     "lines": [

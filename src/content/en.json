@@ -25,7 +25,7 @@
   },
   "about": {
     "kicker": "About",
-    "title": "Six years turning designs into product.",
+    "title": "More than 9 years turning designs into product.",
     "paragraphs": [
       "I'm a Front-End Engineer born in Venezuela and based in Santiago, Chile. I specialize in React, Next.js and TypeScript, with a strong focus on UI architecture, performance and maintainable code.",
       "I've shipped the full in-store pickup flow for Cencosud, worked on international products like SoundExchange, Whitepages and Campomar, built internal UI libraries published to AWS CodeArtifact, and migrated legacy front-ends to React + Redux."
@@ -33,11 +33,11 @@
     "stats": [
       {
         "label": "years in front-end",
-        "value": "6+"
+        "value": "9+"
       },
       {
         "label": "teams & clients",
-        "value": "7"
+        "value": "11+"
       },
       {
         "label": "countries · VE · PE · CL",
@@ -80,16 +80,22 @@
     "title": "Where I've built things.",
     "jobs": [
       {
-        "years": "2023 — Now",
-        "company": "LVA Indices",
-        "role": "Frontend Developer · Santiago",
-        "description": "Financial platforms with React, Next.js and TypeScript. Built an internal UI library and optimized CI/CD pipelines on AWS."
-      },
-      {
         "years": "2022 — Now",
         "company": "Freelance",
         "role": "Front-End Developer · Remote",
         "description": "Athenaworks (SoundExchange, Whitepages) and Aurica, Chile's leading precious-metals broker."
+      },
+      {
+        "years": "2026 — Now",
+        "company": "Variacode",
+        "role": "Software Engineer ·  client: PagerDuty",
+        "description": "Full Stack for Catalytic and Rundeck, with a frontend focus, plus 24/7 on-call rotations for Catalytic ensuring product stability in production."
+      },
+      {
+        "years": "2023 — Now",
+        "company": "LVA Indices",
+        "role": "Frontend Developer · Santiago",
+        "description": "Financial platforms with React, Next.js and TypeScript. Built an internal UI library and optimized CI/CD pipelines on AWS."
       },
       {
         "years": "2021 — 2023",
