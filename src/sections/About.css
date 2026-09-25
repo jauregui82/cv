@@ -99,4 +99,14 @@
   .intro .kicker {
     padding-bottom: 10px;
   }
+
+  /* Mobile brief §6: no WebGL means the slot would otherwise sit as an
+     empty reserved box — collapse the whole intro row instead. */
+  html.no-webgl .intro {
+    display: block;
+  }
+
+  html.no-webgl .hslot {
+    display: none;
+  }
 }

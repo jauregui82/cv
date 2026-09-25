@@ -114,6 +114,16 @@
     height: 60px;
   }
 
+  /* Mobile brief §6: no WebGL means the slot would otherwise sit as an
+     empty reserved box — collapse the whole row instead. */
+  html.no-webgl .jrow {
+    display: block;
+  }
+
+  html.no-webgl .jslot {
+    display: none;
+  }
+
   .work {
     grid-template-columns: minmax(0, 1fr);
   }

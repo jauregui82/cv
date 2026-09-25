@@ -110,6 +110,12 @@ nav.links a:hover {
     flex: none;
   }
 
+  /* Mobile brief §6: no WebGL means the dock would otherwise sit as an
+     empty reserved box — collapse it instead. */
+  html.no-webgl .dock {
+    display: none;
+  }
+
   .controls {
     margin-left: auto;
   }

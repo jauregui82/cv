@@ -123,6 +123,12 @@
     height: 150px;
   }
 
+  /* Mobile brief §6: no WebGL means the slot would otherwise sit as an
+     empty reserved box — collapse it instead. */
+  html.no-webgl .cslot {
+    display: none;
+  }
+
   .contact .rows {
     grid-template-columns: minmax(0, 1fr);
     border-top: none;

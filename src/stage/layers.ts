@@ -9,6 +9,7 @@ import {
   POSE_KEYS,
   SPECS_SECTION_INDEX,
   WORK_SECTION_INDEX,
+  clamp,
   easeInOutCubic,
 } from './choreography'
 import type { Pose } from './choreography'
@@ -235,6 +236,13 @@ export function useAvatarPoseFrame({
   const lastFlipVersionRef = useRef(avatarActionStore.getSnapshot().flipVersion)
   const tmpAnchorRef = useRef(new Vector3())
   const tmpNormalRef = useRef(new Vector3())
+  // Mobile brief §4 "Interacción táctil" — scroll-velocity look:
+  const scrollVelRef = useRef(0)
+  const lastScrollTopRef = useRef(typeof window === 'undefined' ? 0 : window.scrollY)
+  // Mobile brief §4 — glances: `glance` runs 0->1 over 1.4s (1 == idle,
+  // no glance in flight), `nextGlanceAt` is the clock time of the next one.
+  const glanceRef = useRef(1)
+  const nextGlanceAtRef = useRef(4 + Math.random() * 2)
 
   useFrame((state, delta) => {
     const group = poseGroupRef.current
@@ -334,6 +342,31 @@ export function useAvatarPoseFrame({
       ? { rx: 0, ry: 0 }
       : cursorRotation(current.look, state.pointer.x, state.pointer.y)
 
+    // Mobile brief §4 "Interacción táctil" — no cursor on touch, so scroll
+    // speed tilts the head instead: `rx += clamp(vel/2600, -0.3, 0.3)`,
+    // smoothed by a 0.15-per-frame factor (frame-rate-dependent, mirroring
+    // mockup.html's own literal smoothing, not delta-normalized).
+    const scrollTop = window.scrollY
+    const rawVel = (scrollTop - lastScrollTopRef.current) / Math.max(delta, 0.001)
+    lastScrollTopRef.current = scrollTop
+    scrollVelRef.current += (rawVel - scrollVelRef.current) * 0.15
+    const velTilt = !reducedMotion && mobile ? clamp(scrollVelRef.current / 2600, -0.3, 0.3) : 0
+
+    // Mobile brief §4 — glances every 4-6s, a `sin` swing over 1.4s. Not
+    // gated by section directly — instead its contribution is scaled by
+    // `(1 - current.specs)`, same as mockup.html, so it naturally fades out
+    // while the Stack's own per-part turns are showing (brief: "No lo hace
+    // en el Stack") without needing a separate dominant-section check.
+    if (!reducedMotion && mobile && clock > nextGlanceAtRef.current) {
+      glanceRef.current = 0
+      nextGlanceAtRef.current = clock + 4 + Math.random() * 2
+    }
+    if (glanceRef.current < 1) {
+      glanceRef.current = Math.min(1, glanceRef.current + delta / 1.4)
+    }
+    const glanceRy =
+      mobile && glanceRef.current < 1 ? Math.sin(glanceRef.current * Math.PI * 2) * 0.35 * (1 - current.specs) : 0
+
     const worldY = baseWorldY + (bob + bounceLift) * scale
 
     // Contact "yes" nodding, in bursts (brief v2 §5) — continuous while
@@ -358,7 +391,11 @@ export function useAvatarPoseFrame({
       scale * breathe * (1 - squash),
       scale * breathe * (1 + squash),
     )
-    group.rotation.set(current.rx + rx + contactYesRx + nodRx, current.ry + ry + specsWobble, current.rz)
+    group.rotation.set(
+      current.rx + rx + contactYesRx + nodRx + velTilt,
+      current.ry + ry + specsWobble + glanceRy,
+      current.rz,
+    )
 
     const transform = transformRef.current
     transform.x = worldX
@@ -417,6 +454,7 @@ export function useAvatarPoseFrame({
     avatarHeadStore.update(
       [((headTmp.x + 1) / 2) * state.size.width, ((1 - headTmp.y) / 2) * state.size.height],
       dominant,
+      current.h,
     )
   })
 }

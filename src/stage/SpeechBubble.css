@@ -29,3 +29,28 @@
   opacity: 1;
   transform: translate(-10%, -100%) scale(1);
 }
+
+@media (max-width: 760px) {
+  /* Mobile brief §5: beside the head instead of centered above it, with
+     wrapping allowed up to 210px — the tail corner points back at the head,
+     left-aligned on the right-side variant and vice versa. */
+  .speech-bubble {
+    white-space: normal;
+    max-width: 210px;
+    transform: translate(0, -100%) scale(0.6);
+  }
+
+  .speech-bubble.r {
+    border-radius: 14px 14px 14px 3px;
+    transform-origin: 0 100%;
+  }
+
+  .speech-bubble.l {
+    border-radius: 14px 14px 3px 14px;
+    transform-origin: 100% 100%;
+  }
+
+  .speech-bubble.on {
+    transform: translate(0, -100%) scale(1);
+  }
+}

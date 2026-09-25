@@ -6,9 +6,32 @@ import type { Mesh, MeshBasicMaterial } from 'three'
 import { useVariant } from '../hooks/useVariant'
 import type { Variant } from '../hooks/useVariant'
 import { Avatar } from './Avatar'
+import { MOBILE_BREAKPOINT } from './choreography'
 import { createAvatarTransform, shadowBaseOpacity } from './layers'
 import type { AvatarTransform } from './layers'
 import './Stage.css'
+
+/** Mobile brief §6 "Rendimiento": `dpr` capped at 1.5 on mobile (desktop
+ * stays at 2) — the head-only canvas is small on screen there, so the extra
+ * resolution isn't worth the render cost. */
+const MOBILE_MAX_DPR = 1.5
+const DESKTOP_MAX_DPR = 2
+
+function useMaxDpr() {
+  const [maxDpr, setMaxDpr] = useState(() =>
+    window.innerWidth < MOBILE_BREAKPOINT ? MOBILE_MAX_DPR : DESKTOP_MAX_DPR,
+  )
+
+  useEffect(() => {
+    function onResize() {
+      setMaxDpr(window.innerWidth < MOBILE_BREAKPOINT ? MOBILE_MAX_DPR : DESKTOP_MAX_DPR)
+    }
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+
+  return maxDpr
+}
 
 // Brief v2 §5 light setup (head-only avatar, real baked material - these
 // numbers run hotter than the v1 body's flat-color material needed, since
@@ -173,6 +196,10 @@ class CanvasErrorBoundary extends Component<CanvasErrorBoundaryProps, CanvasErro
 
   componentDidCatch(error: unknown) {
     console.error('[stage] WebGL unavailable, rendering the page without the 3D avatar', error)
+    // Mobile brief §6: without WebGL the mobile slots would otherwise sit as
+    // empty reserved boxes — this class lets each section's CSS collapse
+    // them back to nothing.
+    document.documentElement.classList.add('no-webgl')
   }
 
   render() {
@@ -191,13 +218,14 @@ class CanvasErrorBoundary extends Component<CanvasErrorBoundaryProps, CanvasErro
 export function Stage() {
   const { variant } = useVariant()
   const tabVisible = useTabVisible()
+  const maxDpr = useMaxDpr()
   const transformRef = useRef<AvatarTransform>(createAvatarTransform())
 
   return (
     <div className="stage" aria-hidden="true">
       <CanvasErrorBoundary>
         <Canvas
-          dpr={[1, 2]}
+          dpr={[1, maxDpr]}
           gl={{ alpha: true, antialias: true }}
           camera={{ fov: 30, position: [0, 0, 10], near: 0.1, far: 100 }}
           frameloop={tabVisible ? 'always' : 'never'}

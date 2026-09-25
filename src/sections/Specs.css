@@ -126,6 +126,12 @@
     height: min(270px, 34vh);
   }
 
+  /* Mobile brief §6: no WebGL means the slot would otherwise sit as an
+     empty reserved box — collapse it instead. */
+  html.no-webgl .sslot {
+    display: none;
+  }
+
   .specs__mobile-card {
     display: grid;
     grid-row: 3;

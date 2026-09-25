@@ -257,12 +257,19 @@ export interface AvatarHeadSnapshot {
   headAnchor: [number, number] | null
   dominant: SectionIndex
   sectionChangeVersion: number
+  /** The damped pose's current `h` (head height as a fraction of viewport
+   * height) — mobile brief §4/§5: both the touch hit-zone radius
+   * (`AvatarTapListener`, `max(24, hFraction*innerHeight*0.55)`) and the
+   * speech bubble's offset from the head need this, and it's already
+   * computed once per frame here anyway. */
+  hFraction: number
 }
 
 const avatarHeadSnapshot: AvatarHeadSnapshot = {
   headAnchor: null,
   dominant: 0,
   sectionChangeVersion: 0,
+  hFraction: 0,
 }
 
 let lastKnownDominant: SectionIndex | null = null
@@ -272,12 +279,13 @@ export const avatarHeadStore = {
     return avatarHeadSnapshot
   },
 
-  update(headAnchor: [number, number] | null, dominant: SectionIndex) {
+  update(headAnchor: [number, number] | null, dominant: SectionIndex, hFraction: number) {
     if (lastKnownDominant === null || dominant !== lastKnownDominant) {
       avatarHeadSnapshot.sectionChangeVersion += 1
     }
     lastKnownDominant = dominant
     avatarHeadSnapshot.dominant = dominant
     avatarHeadSnapshot.headAnchor = headAnchor
+    avatarHeadSnapshot.hFraction = hFraction
   },
 }

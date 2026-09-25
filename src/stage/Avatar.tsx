@@ -8,7 +8,8 @@ import type { Group } from 'three'
 import { useAvatarPoseFrame } from './layers'
 import type { AvatarTransform } from './layers'
 import { useScrollPose } from './useScrollPose'
-import { avatarActionStore } from './store'
+import { MOBILE_BREAKPOINT } from './choreography'
+import { avatarActionStore, avatarHeadStore } from './store'
 import type { Variant } from '../hooks/useVariant'
 
 // Runtime string, not a build-time import - Vite's `base` rewriting (needed
@@ -114,16 +115,27 @@ interface AvatarTapListenerProps {
   poseGroupRef: MutableRefObject<Group | null>
 }
 
+/** Mobile brief §4 "Tocar la cabeza": minimum touch hit-radius, px. */
+const MOBILE_TAP_MIN_RADIUS_PX = 24
+/** Mobile brief §4: `0.55 · alto de la cabeza`. */
+const MOBILE_TAP_RADIUS_HEIGHT_FACTOR = 0.55
+
 /**
- * Manual raycast click detector for the avatar (brief 4.3 "Toque"). The
- * Stage wrapper is deliberately `pointer-events: none` (Stage.css) so the
- * fixed full-screen canvas never blocks clicks on page content beneath it —
- * which also means r3f's own per-mesh `onClick` can't fire, since it relies
- * on native pointer events actually reaching the canvas DOM element.
- * Instead this listens on `window` and manually raycasts against
- * `poseGroupRef`'s subtree on every click; it never calls
- * `preventDefault`/`stopPropagation`, so it's purely observational and
- * click-through to underlying page content keeps working everywhere.
+ * Manual click/tap detector for the avatar (brief 4.3 "Toque"). The Stage
+ * wrapper is deliberately `pointer-events: none` (Stage.css) so the fixed
+ * full-screen canvas never blocks clicks on page content beneath it — which
+ * also means r3f's own per-mesh `onClick` can't fire, since it relies on
+ * native pointer events actually reaching the canvas DOM element. Instead
+ * this listens on `window`; it never calls `preventDefault`/
+ * `stopPropagation`, so it's purely observational and click-through to
+ * underlying page content keeps working everywhere.
+ *
+ * Desktop raycasts precisely against `poseGroupRef`'s mesh subtree. Mobile
+ * uses a simpler, more forgiving circular zone instead (brief §4: the head
+ * is small and the exact mesh silhouette — hair, glasses — is a fussier
+ * target for a fingertip than a cursor), centered on the same projected
+ * head anchor the speech bubble already tracks (`avatarHeadStore`), so no
+ * extra per-click projection work is needed.
  */
 function AvatarTapListener({ poseGroupRef }: AvatarTapListenerProps) {
   const { camera, size } = useThree()
@@ -133,6 +145,16 @@ function AvatarTapListener({ poseGroupRef }: AvatarTapListenerProps) {
     const ndc = new Vector2()
 
     function onClick(event: MouseEvent) {
+      if (window.innerWidth < MOBILE_BREAKPOINT) {
+        const { headAnchor, hFraction } = avatarHeadStore.getSnapshot()
+        if (!headAnchor) return
+        const radius = Math.max(MOBILE_TAP_MIN_RADIUS_PX, hFraction * window.innerHeight * MOBILE_TAP_RADIUS_HEIGHT_FACTOR)
+        if (Math.hypot(event.clientX - headAnchor[0], event.clientY - headAnchor[1]) < radius) {
+          avatarActionStore.triggerPoke()
+        }
+        return
+      }
+
       const group = poseGroupRef.current
       if (!group) return
 
