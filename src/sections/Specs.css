@@ -91,6 +91,10 @@
   padding-top: 24px;
 }
 
+.specs__tail--outside {
+  display: none;
+}
+
 @media (max-width: 760px) {
   .specs__callouts {
     display: grid;
@@ -111,5 +115,15 @@
 
   .specs__callout p {
     font-size: 0.86rem;
+  }
+
+  .specs__tail--inside {
+    display: none;
+  }
+
+  .specs__tail--outside {
+    display: block;
+    padding-top: 28px;
+    padding-bottom: 12px;
   }
 }

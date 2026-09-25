@@ -94,6 +94,25 @@
 @media (max-width: 760px) {
   .hero {
     grid-template-rows: auto 1fr auto;
+    container-type: inline-size;
+  }
+
+  .hero .name .display {
+    font-size: min(21cqw, 92px);
+  }
+
+  :root[data-v='dia'] .hero .name .display {
+    font-size: min(24cqw, 96px);
+  }
+
+  .hero .eyebrow {
+    max-width: 30ch;
+  }
+
+  .hero .foot {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
   }
 }
 

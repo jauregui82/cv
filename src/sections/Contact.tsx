@@ -49,6 +49,7 @@ export function Contact() {
 
   return (
     <section id="contact" className="contact wrap">
+      <span className="cslot" aria-hidden="true" />
       <Reveal>
         <h2 className="display">
           {contact.titleLine1}
@@ -58,47 +59,58 @@ export function Contact() {
       </Reveal>
       <Reveal delay={0.1}>
         <div className="rows">
-          <div>
+          <div className="row-email">
             <span className="mono">{contact.emailLabel}</span>
+            <span className="val email-visible">{contact.email}</span>
             <button type="button" className="copy" title={contact.email} onClick={handleCopy}>
               {copied ? contact.copiedLabel : contact.copyLabel}
             </button>
           </div>
-          <div>
+          <div className="row-location">
             <span className="mono">{contact.locationLabel}</span>
             <span className="val">{contact.locationValue}</span>
           </div>
           <div className="cv" ref={cvRef}>
             <span className="mono">{contact.cvLabel}</span>
-            <button
-              type="button"
-              className="copy"
-              aria-haspopup="true"
-              aria-expanded={cvOpen}
-              onClick={() => setCvOpen((open) => !open)}
-            >
-              {contact.cvButtonLabel}
-            </button>
-            <AnimatePresence>
-              {cvOpen && (
-                <motion.div
-                  className="seg cv-picker"
-                  role="group"
-                  aria-label={contact.cvGroupLabel}
-                  initial={reduceMotion ? undefined : { opacity: 0, y: -6, scale: 0.96 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={reduceMotion ? undefined : { opacity: 0, y: -6, scale: 0.96 }}
-                  transition={{ type: 'spring', bounce: 0, duration: 0.3 }}
-                >
-                  <a href={CV_FILES.es.href} download={CV_FILES.es.filename} onClick={() => setCvOpen(false)}>
-                    {contact.cvOptionEs}
-                  </a>
-                  <a href={CV_FILES.en.href} download={CV_FILES.en.filename} onClick={() => setCvOpen(false)}>
-                    {contact.cvOptionEn}
-                  </a>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <div className="cv-desktop">
+              <button
+                type="button"
+                className="copy"
+                aria-haspopup="true"
+                aria-expanded={cvOpen}
+                onClick={() => setCvOpen((open) => !open)}
+              >
+                {contact.cvButtonLabel}
+              </button>
+              <AnimatePresence>
+                {cvOpen && (
+                  <motion.div
+                    className="seg cv-picker"
+                    role="group"
+                    aria-label={contact.cvGroupLabel}
+                    initial={reduceMotion ? undefined : { opacity: 0, y: -6, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={reduceMotion ? undefined : { opacity: 0, y: -6, scale: 0.96 }}
+                    transition={{ type: 'spring', bounce: 0, duration: 0.3 }}
+                  >
+                    <a href={CV_FILES.es.href} download={CV_FILES.es.filename} onClick={() => setCvOpen(false)}>
+                      {contact.cvOptionEs}
+                    </a>
+                    <a href={CV_FILES.en.href} download={CV_FILES.en.filename} onClick={() => setCvOpen(false)}>
+                      {contact.cvOptionEn}
+                    </a>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+            <div className="cv-mobile">
+              <a className="btn primary" href={CV_FILES.es.href} download={CV_FILES.es.filename}>
+                {contact.cvOptionEsShort}
+              </a>
+              <a className="btn" href={CV_FILES.en.href} download={CV_FILES.en.filename}>
+                {contact.cvOptionEnShort}
+              </a>
+            </div>
           </div>
         </div>
       </Reveal>

@@ -11,6 +11,14 @@
   gap: 28px;
 }
 
+.intro {
+  display: contents;
+}
+
+.hslot {
+  display: none;
+}
+
 .about h2 {
   font-size: clamp(2.6rem, 6.4vw, 6rem);
 }
@@ -63,6 +71,32 @@
   }
 
   .stats {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .stats b {
+    font-size: clamp(1.4rem, 6vw, 2.1rem);
+  }
+
+  .stats span {
+    font-size: 0.76rem;
+    line-height: 1.3;
+  }
+
+  .intro {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 14px;
+    align-items: end;
+  }
+
+  .hslot {
+    display: block;
+    aspect-ratio: 1;
+    width: 100%;
+  }
+
+  .intro .kicker {
+    padding-bottom: 10px;
   }
 }

@@ -43,6 +43,8 @@ export function Header() {
           jau<b>.</b>
         </a>
 
+        <span className="dock" aria-hidden="true" />
+
         <nav className="links" aria-label={header.navGroupLabel}>
           <a href="#about">{nav.about}</a>
           <a href="#specs">{nav.specs}</a>

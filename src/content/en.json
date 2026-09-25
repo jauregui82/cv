@@ -153,7 +153,9 @@
     "cvButtonLabel": "Download CV",
     "cvGroupLabel": "Choose the CV language",
     "cvOptionEs": "Español",
-    "cvOptionEn": "English"
+    "cvOptionEn": "English",
+    "cvOptionEsShort": "Descargar · ES",
+    "cvOptionEnShort": "Download · EN"
   },
   "speech": {
     "lines": [

@@ -10,7 +10,10 @@ export function About() {
     <section id="about" className="about wrap">
       <div className="aboutcopy">
         <Reveal>
-          <span className="mono kicker">{about.kicker}</span>
+          <div className="intro">
+            <span className="hslot" aria-hidden="true" />
+            <span className="mono kicker">{about.kicker}</span>
+          </div>
         </Reveal>
         <Reveal delay={0.05}>
           <h2 className="display">{about.title}</h2>

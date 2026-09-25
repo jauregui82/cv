@@ -91,7 +91,10 @@ export function Work() {
               >
                 <span className="mono yr">{job.years}</span>
                 <div>
-                  <h3>{job.company}</h3>
+                  <div className="jrow">
+                    <h3>{job.company}</h3>
+                    <span className="jslot" aria-hidden="true" />
+                  </div>
                   <div className="role">{job.role}</div>
                   <p>{job.description}</p>
                 </div>

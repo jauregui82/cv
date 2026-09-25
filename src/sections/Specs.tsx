@@ -66,9 +66,13 @@ export function Specs() {
         </div>
 
         <Reveal>
-          <p className="specs__tail">{specs.tail}</p>
+          <p className="specs__tail specs__tail--inside">{specs.tail}</p>
         </Reveal>
       </div>
+
+      <Reveal>
+        <p className="specs__tail specs__tail--outside wrap">{specs.tail}</p>
+      </Reveal>
     </section>
   )
 }

@@ -81,6 +81,8 @@ export interface Content {
     cvGroupLabel: string
     cvOptionEs: string
     cvOptionEn: string
+    cvOptionEsShort: string
+    cvOptionEnShort: string
   }
   speech: {
     lines: string[]
