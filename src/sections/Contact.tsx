@@ -1,15 +1,40 @@
 import { useEffect, useRef, useState } from 'react'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useLanguage } from '../hooks/useLanguage'
 import { Reveal } from '../components/Reveal'
 import './Contact.css'
 
+const CV_FILES = {
+  es: { href: `${import.meta.env.BASE_URL}cv/cv-es.pdf`, filename: 'Jauregui-Crespo-CV-ES.pdf' },
+  en: { href: `${import.meta.env.BASE_URL}cv/cv-en.pdf`, filename: 'Jauregui-Crespo-CV-EN.pdf' },
+}
+
 export function Contact() {
   const { content } = useLanguage()
   const { contact } = content
+  const reduceMotion = useReducedMotion()
   const [copied, setCopied] = useState(false)
+  const [cvOpen, setCvOpen] = useState(false)
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const cvRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => () => clearTimeout(timeoutRef.current), [])
+
+  useEffect(() => {
+    if (!cvOpen) return
+    function onPointerDown(event: PointerEvent) {
+      if (!cvRef.current?.contains(event.target as Node)) setCvOpen(false)
+    }
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') setCvOpen(false)
+    }
+    window.addEventListener('pointerdown', onPointerDown)
+    window.addEventListener('keydown', onKeyDown)
+    return () => {
+      window.removeEventListener('pointerdown', onPointerDown)
+      window.removeEventListener('keydown', onKeyDown)
+    }
+  }, [cvOpen])
 
   async function handleCopy() {
     try {
@@ -35,14 +60,45 @@ export function Contact() {
         <div className="rows">
           <div>
             <span className="mono">{contact.emailLabel}</span>
-            <span className="val">{contact.email}</span>
-            <button type="button" className="copy" onClick={handleCopy}>
+            <button type="button" className="copy" title={contact.email} onClick={handleCopy}>
               {copied ? contact.copiedLabel : contact.copyLabel}
             </button>
           </div>
           <div>
             <span className="mono">{contact.locationLabel}</span>
             <span className="val">{contact.locationValue}</span>
+          </div>
+          <div className="cv" ref={cvRef}>
+            <span className="mono">{contact.cvLabel}</span>
+            <button
+              type="button"
+              className="copy"
+              aria-haspopup="true"
+              aria-expanded={cvOpen}
+              onClick={() => setCvOpen((open) => !open)}
+            >
+              {contact.cvButtonLabel}
+            </button>
+            <AnimatePresence>
+              {cvOpen && (
+                <motion.div
+                  className="seg cv-picker"
+                  role="group"
+                  aria-label={contact.cvGroupLabel}
+                  initial={reduceMotion ? undefined : { opacity: 0, y: -6, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={reduceMotion ? undefined : { opacity: 0, y: -6, scale: 0.96 }}
+                  transition={{ type: 'spring', bounce: 0, duration: 0.3 }}
+                >
+                  <a href={CV_FILES.es.href} download={CV_FILES.es.filename} onClick={() => setCvOpen(false)}>
+                    {contact.cvOptionEs}
+                  </a>
+                  <a href={CV_FILES.en.href} download={CV_FILES.en.filename} onClick={() => setCvOpen(false)}>
+                    {contact.cvOptionEn}
+                  </a>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </Reveal>

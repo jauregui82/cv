@@ -76,6 +76,11 @@ export interface Content {
     copiedLabel: string
     locationLabel: string
     locationValue: string
+    cvLabel: string
+    cvButtonLabel: string
+    cvGroupLabel: string
+    cvOptionEs: string
+    cvOptionEn: string
   }
   speech: {
     lines: string[]

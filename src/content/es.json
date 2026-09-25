@@ -94,7 +94,7 @@
       {
         "years": "2023 — 2026",
         "company": "LVA Indices",
-        "role": "Frontend Developer · Santiago",
+        "role": "Frontend Developer · Remoto",
         "description": "Construí plataformas financieras con React, Next.js y TypeScript. En paralelo creé librerías internas de componentes y utilidades para los proyectos de la empresa, desarrollé scrapers con Playwright e integré IA al equipo con un servidor MCP, agentes y Skills."
       },
       {
@@ -148,7 +148,12 @@
     "copyLabel": "Copiar email",
     "copiedLabel": "Copiado",
     "locationLabel": "Desde",
-    "locationValue": "Santiago de Chile — 100% remoto"
+    "locationValue": "Santiago de Chile — 100% remoto",
+    "cvLabel": "CV",
+    "cvButtonLabel": "Descargar CV",
+    "cvGroupLabel": "Elegí el idioma del CV",
+    "cvOptionEs": "Español",
+    "cvOptionEn": "English"
   },
   "speech": {
     "lines": [

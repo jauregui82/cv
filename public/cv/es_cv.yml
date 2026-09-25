@@ -1,0 +1,129 @@
+cv:
+  name: Jauregui Crespo
+  location: Santiago, Chile (100% remoto)
+  email: jauregui.crespo@gmail.com
+  phone: +56 9 3739 3963
+  website: https://jauregui82.github.io/cv/
+  social_networks:
+    - network: GitHub
+      username: jauregui82
+
+  sections:
+    professional_profile:
+    - Ingeniero en Informática y Software Engineer con más de 9 años construyendo productos web, especializado en frontend y con responsabilidades actuales de desarrollo full stack y guardias on-call para PagerDuty.
+    - Especializado en React, Next.js y TypeScript, arquitectura de componentes, librerías UI internas y optimización del rendimiento en aplicaciones web escalables.
+    - Experiencia en plataformas financieras y comercio electrónico de alto tráfico, incluida la implementación de tótems de autoatención en 56 tiendas de Cencosud a nivel nacional.
+    - Integro la IA al flujo de desarrollo de los equipos creando servidores MCP, agentes y Skills que automatizan tareas repetitivas.
+
+    experience:
+      - company: Variacode
+        position: "Software Engineer (Cliente: PagerDuty)"
+        start_date: 2026
+        end_date: present
+        location: Remoto
+        summary: Desarrollo full stack para Catalytic y Rundeck, dos productos de PagerDuty, con foco en frontend y contribuciones al backend según las necesidades de cada equipo.
+        highlights:
+          - Entregué funcionalidades full stack en dos productos de PagerDuty, Catalytic y Rundeck, diseñando las interfaces, definiendo su arquitectura de componentes y contribuyendo al backend.
+          - Mantengo la disponibilidad de Catalytic en producción participando en la cobertura operativa 24/7 mediante turnos de guardia on-call.
+
+      - company: Freelance
+        position: Desarrollador Frontend
+        start_date: 2022
+        end_date: present
+        location: Remoto
+        summary: Desarrollo frontend para productos internacionales y clientes locales.
+        highlights:
+          - Colaboré en productos internacionales a través de Athenaworks (SoundExchange, Whitepages) y para Aurica, broker líder de metales preciosos en Chile, desarrollando con React, Next.js y TypeScript.
+
+      - company: LVA Indices
+        position: Desarrollador Frontend
+        start_date: 2023-11
+        end_date: 2026
+        location: Santiago, Chile
+        summary: Desarrollo frontend de plataformas financieras, librerías internas y herramientas de productividad para el equipo.
+        highlights:
+          - Construí plataformas y dashboards financieros con React, Next.js y TypeScript, integrados con APIs REST y con flujos de datos gestionados con React Query.
+          - Eliminé código duplicado entre los proyectos de la empresa creando dos librerías internas, una de componentes React publicada en AWS CodeArtifact y otra de utilidades JavaScript.
+          - Integré la IA al flujo de desarrollo del equipo con un servidor MCP que genera componentes con la librería UI y un agente que distribuye cada tarea según la Skill adecuada, o crea una nueva si no existe.
+          - Automaticé la obtención de datos desarrollando scrapers con Playwright y contribuí a los pipelines CI/CD en AWS junto a los equipos de diseño y backend.
+
+      - company: Cencosud S.A.
+        position: Desarrollador Frontend
+        start_date: 2021-08
+        end_date: 2023-09
+        location: Remoto
+        summary: Desarrollo frontend e implementación de iniciativas de comercio electrónico y retiro en tienda de alto tráfico. Ingresé como externo vía ACL y la empresa me internalizó.
+        highlights:
+          - Implementé los tótems de Retiro en tienda en 56 tiendas a nivel nacional, desde programar el diseño del ticket impreso hasta monitorear la puesta en marcha de cada equipo.
+          - Logré una mejora estimada del 35 % en el rendimiento frontend liderando la migración progresiva de componentes heredados a React y Redux.
+          - Lideré el desarrollo frontend de múltiples iniciativas de comercio electrónico, coordinando el trabajo técnico con los equipos de UX y backend bajo Scrum y Kanban.
+          - Fortalecí la calidad de los proyectos de comercio electrónico implementando pruebas automatizadas con Jest y Cypress.
+
+      - company: ACL
+        position: "Desarrollador Frontend (Cliente: Cencosud)"
+        start_date: 2020-12
+        end_date: 2021-08
+        location: Remoto
+        summary: Desarrollo frontend para aplicaciones web corporativas de Cencosud, como consultor externo.
+        highlights:
+          - Amplié la librería de componentes reutilizables del equipo desarrollando interfaces con React y Material-UI, integrando APIs REST y documentando la guía de estilos, lo que llevó a que Cencosud me internalizara.
+
+      - company: Cumplo
+        position: Desarrollador Frontend
+        start_date: 2019-05
+        end_date: 2020-12
+        location: Santiago, Chile
+        summary: Desarrollo de productos financieros digitales.
+        highlights:
+          - Lancé interfaces accesibles y responsivas para productos financieros digitales, implementando funcionalidades con React, Redux y Apollo GraphQL.
+
+      - company: La Agencia®
+        position: Desarrollador Web
+        start_date: 2018-10
+        end_date: 2019-03
+        location: Lima, Perú
+        summary: Desarrollo web para proyectos de distintos clientes.
+        highlights:
+          - Llevé los diseños de distintos clientes a interfaces responsivas con HTML5, CSS3, JavaScript y Bootstrap, en colaboración con diseñadores y project managers.
+
+      - company: MasterHelp
+        position: Coordinador de Desarrollo
+        start_date: 2017-09
+        end_date: 2018-10
+        location: Lima, Perú
+        summary: Coordinación técnica y desarrollo de un portal web.
+        highlights:
+          - Construí el portal MasterHelp.net de principio a fin, definiendo el stack frontend y coordinando el trabajo técnico del equipo.
+
+    education:
+      - institution: EC English Language Centres
+        area: Inglés general
+        degree:
+        start_date: 2025-02
+        end_date: 2025-07
+        location: Malta
+        highlights:
+          - Formación intensiva en inglés general y comunicación profesional.
+
+      - institution: Colegio Universitario de Los Teques Cecilio Acosta
+        area: Ingeniería en Informática
+        degree: Ingeniero en Informática
+        start_date: 2010
+        end_date: 2016
+        location: Venezuela
+
+    skills:
+      - label: Ingeniería de software
+        details: Desarrollo full stack, ingeniería frontend, aplicaciones web escalables, arquitectura de componentes, librerías internas reutilizables
+      - label: Frontend y gestión de estado
+        details: React, Next.js, TypeScript, JavaScript (ES6+), HTML5, CSS3, Redux, React Query
+      - label: Backend y APIs
+        details: Desarrollo de funcionalidades backend, integración de APIs REST, Apollo GraphQL
+      - label: IA aplicada al desarrollo
+        details: Servidores MCP, agentes, creación de Skills, automatización de flujos de trabajo con IA
+      - label: Calidad y rendimiento
+        details: Accesibilidad, diseño responsivo, optimización del rendimiento web, pruebas automatizadas, Jest, Cypress, Playwright, Testing Library
+      - label: Nube y entrega continua
+        details: AWS, CodeArtifact, CI/CD, Git, soporte en producción, guardias on-call 24/7
+      - label: Colaboración
+        details: Liderazgo técnico, colaboración entre equipos, Scrum, Kanban

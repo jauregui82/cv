@@ -148,7 +148,12 @@
     "copyLabel": "Copy email",
     "copiedLabel": "Copied",
     "locationLabel": "Based in",
-    "locationValue": "Santiago, Chile — 100% remote"
+    "locationValue": "Santiago, Chile — 100% remote",
+    "cvLabel": "CV",
+    "cvButtonLabel": "Download CV",
+    "cvGroupLabel": "Choose the CV language",
+    "cvOptionEs": "Español",
+    "cvOptionEn": "English"
   },
   "speech": {
     "lines": [

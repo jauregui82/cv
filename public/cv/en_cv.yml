@@ -1,0 +1,129 @@
+cv:
+  name: Jauregui Crespo
+  location: Santiago, Chile (100% remote)
+  email: jauregui.crespo@gmail.com
+  phone: +56 9 3739 3963
+  website: https://jauregui82.github.io/cv/
+  social_networks:
+    - network: GitHub
+      username: jauregui82
+
+  sections:
+    professional_profile:
+    - Computer Engineer and Software Engineer with 9+ years building web products, specialized in front-end and currently doing full stack development and on-call rotations for PagerDuty.
+    - Specialized in React, Next.js and TypeScript, component architecture, internal UI libraries and performance optimization for scalable web applications.
+    - Experience with financial platforms and high-traffic e-commerce, including rolling out self-service kiosks to 56 Cencosud stores nationwide.
+    - Bring AI into team workflows by building MCP servers, agents and Skills that automate repetitive work.
+
+    experience:
+      - company: Variacode
+        position: "Software Engineer (Client: PagerDuty)"
+        start_date: 2026
+        end_date: present
+        location: Remote
+        summary: Full stack development for Catalytic and Rundeck, two PagerDuty products, with a front-end focus and back-end contributions as each team needs.
+        highlights:
+          - Shipped full stack features across two PagerDuty products, Catalytic and Rundeck, designing the interfaces, defining their component architecture and contributing to the back-end.
+          - Keep Catalytic available in production as part of its 24/7 operational coverage through on-call rotations.
+
+      - company: Freelance
+        position: Front-End Developer
+        start_date: 2022
+        end_date: present
+        location: Remote
+        summary: Front-end development for international products and local clients.
+        highlights:
+          - Contributed to international products through Athenaworks (SoundExchange, Whitepages) and to Aurica, Chile's leading precious-metals broker, building with React, Next.js and TypeScript.
+
+      - company: LVA Indices
+        position: Front-End Developer
+        start_date: 2023-11
+        end_date: 2026
+        location: Santiago, Chile
+        summary: Front-end development of financial platforms, internal libraries and productivity tooling for the team.
+        highlights:
+          - Built financial platforms and dashboards with React, Next.js and TypeScript, integrated with REST APIs and with data flows managed through React Query.
+          - Eliminated duplicated code across the company's projects by creating two internal libraries, a React component library published to AWS CodeArtifact and a JavaScript utilities library.
+          - Brought AI into the team's development workflow with an MCP server that generates components from the UI library and an agent that routes each task to the right Skill, or creates a new one when none exists.
+          - Automated data collection by building scrapers with Playwright, and contributed to CI/CD pipelines on AWS alongside the design and back-end teams.
+
+      - company: Cencosud S.A.
+        position: Front-End Developer
+        start_date: 2021-08
+        end_date: 2023-09
+        location: Remote
+        summary: Front-end development and rollout of high-traffic e-commerce and in-store pickup initiatives. Joined as a contractor through ACL and was later brought in-house.
+        highlights:
+          - Rolled out in-store pickup kiosks to 56 stores nationwide, from coding the printed ticket design to monitoring each unit's go-live.
+          - Achieved an estimated 35% front-end performance improvement by leading the progressive migration of legacy components to React and Redux.
+          - Led front-end development for multiple e-commerce initiatives, coordinating technical work with UX and back-end teams under Scrum and Kanban.
+          - Strengthened the quality of e-commerce projects by implementing automated tests with Jest and Cypress.
+
+      - company: ACL
+        position: "Front-End Developer (Client: Cencosud)"
+        start_date: 2020-12
+        end_date: 2021-08
+        location: Remote
+        summary: Front-end development for Cencosud's corporate web applications as an external contractor.
+        highlights:
+          - Expanded the team's reusable component library by building interfaces with React and Material-UI, integrating REST APIs and documenting the style guide, which led Cencosud to bring me in-house.
+
+      - company: Cumplo
+        position: Front-End Developer
+        start_date: 2019-05
+        end_date: 2020-12
+        location: Santiago, Chile
+        summary: Development of digital financial products.
+        highlights:
+          - Shipped accessible, responsive interfaces for digital financial products, implementing features with React, Redux and Apollo GraphQL.
+
+      - company: La Agencia®
+        position: Web Developer
+        start_date: 2018-10
+        end_date: 2019-03
+        location: Lima, Peru
+        summary: Web development for projects across multiple clients.
+        highlights:
+          - Turned client designs into responsive interfaces with HTML5, CSS3, JavaScript and Bootstrap, working with designers and project managers.
+
+      - company: MasterHelp
+        position: Development Lead
+        start_date: 2017-09
+        end_date: 2018-10
+        location: Lima, Peru
+        summary: Technical coordination and development of a web portal.
+        highlights:
+          - Built the MasterHelp.net portal end to end, defining the front-end stack and coordinating the team's technical work.
+
+    education:
+      - institution: EC English Language Centres
+        area: General English
+        degree:
+        start_date: 2025-02
+        end_date: 2025-07
+        location: Malta
+        highlights:
+          - Intensive training in general English and professional communication.
+
+      - institution: Colegio Universitario de Los Teques Cecilio Acosta
+        area: Computer Engineering
+        degree: Computer Engineer
+        start_date: 2010
+        end_date: 2016
+        location: Venezuela
+
+    skills:
+      - label: Software engineering
+        details: Full stack development, front-end engineering, scalable web applications, component architecture, reusable internal libraries
+      - label: Front-end & state management
+        details: React, Next.js, TypeScript, JavaScript (ES6+), HTML5, CSS3, Redux, React Query
+      - label: Back-end & APIs
+        details: Back-end feature development, REST API integration, Apollo GraphQL
+      - label: AI-assisted development
+        details: MCP servers, agents, Skill creation, AI workflow automation
+      - label: Quality & performance
+        details: Accessibility, responsive design, web performance optimization, automated testing, Jest, Cypress, Playwright, Testing Library
+      - label: Cloud & delivery
+        details: AWS, CodeArtifact, CI/CD, Git, production support, 24/7 on-call rotations
+      - label: Collaboration
+        details: Technical leadership, cross-team collaboration, Scrum, Kanban

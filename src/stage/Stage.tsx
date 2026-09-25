@@ -184,7 +184,9 @@ class CanvasErrorBoundary extends Component<CanvasErrorBoundaryProps, CanvasErro
  * The single fixed full-screen Canvas (brief 4.1), mounted once in App. Sits
  * above page content (z-index 1) and below the Header (z-index 10) — see
  * `Stage.css`. `pointer-events: none` on the wrapper so it never blocks
- * clicks; the page itself provides the background color via `--bg`.
+ * clicks; r3f's `<Canvas>` sets its own inline `pointer-events: auto` by
+ * default, so it's overridden explicitly here too. The page itself provides
+ * the background color via `--bg`.
  */
 export function Stage() {
   const { variant } = useVariant()
@@ -199,6 +201,7 @@ export function Stage() {
           gl={{ alpha: true, antialias: true }}
           camera={{ fov: 30, position: [0, 0, 10], near: 0.1, far: 100 }}
           frameloop={tabVisible ? 'always' : 'never'}
+          style={{ pointerEvents: 'none' }}
         >
           <Lights variant={variant} />
           <ContactShadow variant={variant} transformRef={transformRef} />

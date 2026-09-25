@@ -17,10 +17,36 @@
 
 .contact .rows {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
   border-top: 1px solid var(--line);
   padding-top: 24px;
+}
+
+.contact .cv {
+  position: relative;
+}
+
+.cv-picker {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 1;
+}
+
+.cv-picker a {
+  font: 500 0.72rem/1 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--muted);
+  padding: 0.55em 0.8em;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.cv-picker a:hover {
+  color: var(--ink);
 }
 
 .contact .rows > div {
