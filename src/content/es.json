@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "Jauregui Crespo CV"
+    "title": "Jauregui Crespo — Software Engineer"
   },
   "nav": {
     "about": "Sobre mí",
@@ -16,28 +16,28 @@
     "variantDia": "Día"
   },
   "hero": {
-    "eyebrow": "Front-End Engineer — Santiago de Chile",
+    "eyebrow": "Software Engineer · Front-End — Santiago de Chile, 100% remoto",
     "name": "Jauregui Crespo",
-    "ledeBefore": "Construyo aplicaciones web escalables con ",
+    "ledeBefore": "Construyo productos web que escalan con ",
     "ledeEmphasis": "React, Next.js y TypeScript",
-    "ledeAfter": " — y cuido el detalle hasta el último píxel.",
+    "ledeAfter": " (y los mantengo en pie cuando llegan a producción).",
     "indicator": "Desliza. Te sigo con la mirada."
   },
   "about": {
     "kicker": "Sobre mí",
-    "title": "Más de 9 años convirtiendo diseños en producto.",
+    "title": "Más de nueve años convirtiendo diseños en producto.",
     "paragraphs": [
-      "Soy Front-End Engineer, nacido en Venezuela y radicado en Santiago de Chile. Me especializo en React, Next.js y TypeScript, con foco en arquitectura UI, rendimiento y código mantenible.",
-      "He construido el ciclo completo de retiro en tienda para Cencosud, trabajado en productos internacionales como SoundExchange, Whitepages y Campomar, creado librerías UI internas publicadas en AWS CodeArtifact y migrado front-ends legacy a React + Redux."
+      "Soy Ingeniero en Informática, nacido en Venezuela y radicado en Santiago de Chile. Me especializo en front-end con React, Next.js y TypeScript, y hoy también desarrollo full stack para PagerDuty, donde además hago guardias on-call para mantener un producto estable en producción.",
+      "He trabajado en plataformas financieras y en e-commerce de alto tráfico: llevé los tótems de Retiro en tienda de Cencosud a 56 tiendas en todo Chile y creé librerías internas para los proyectos de LVA Indices. Hoy la IA es parte de mi flujo: construyo servidores MCP, agentes y Skills que automatizan el trabajo repetitivo del equipo."
     ],
     "stats": [
       {
-        "label": "años en front-end",
+        "label": "años construyendo para la web",
         "value": "9+"
       },
       {
         "label": "equipos y clientes",
-        "value": "11+"
+        "value": "15+"
       },
       {
         "label": "países · VE · PE · CL",
@@ -49,7 +49,7 @@
     "kicker": "Ficha técnica",
     "titleLine1": "Modelo JC‑26.",
     "titleLine2": "Especificaciones.",
-    "modelLine1": "Front-End · build 2016–2026",
+    "modelLine1": "Front-End + Full Stack · build 2017–2026",
     "modelLine2": "Peso: 0 kg de código legacy",
     "groups": [
       {
@@ -58,74 +58,74 @@
       },
       {
         "label": "Visión · gafas",
-        "text": "Arquitectura UI · Accesibilidad · Rendimiento web"
+        "text": "Arquitectura de componentes · Accesibilidad · Rendimiento web"
       },
       {
         "label": "Oído · escucha el estado",
-        "text": "Redux · React Query · Apollo GraphQL"
+        "text": "Redux · React Query · Apollo GraphQL · APIs REST"
       },
       {
         "label": "Olfato · huele los bugs",
-        "text": "Jest · Cypress · Testing Library"
+        "text": "Jest · Cypress · Playwright · Testing Library"
       },
       {
         "label": "Barba · crece con cada deploy",
-        "text": "AWS · CI/CD · CodeArtifact · Git"
+        "text": "AWS · CI/CD · CodeArtifact · Git · On-call 24/7"
       }
     ],
-    "tail": "Probado en campo con Scrum, Kanban, Material‑UI, SASS y Bootstrap."
+    "tail": "Probado en campo con Scrum, Kanban, Material‑UI, SASS y Bootstrap, junto a equipos de UX, diseño y backend."
   },
   "work": {
     "kicker": "Trayectoria",
     "title": "Dónde he construido.",
     "jobs": [
       {
+        "years": "2026 — Hoy",
+        "company": "Variacode",
+        "role": "Software Engineer · cliente: PagerDuty",
+        "description": "Entrego funcionalidades full stack en dos productos de PagerDuty, Catalytic y Rundeck, diseñando interfaces y su arquitectura de componentes. Mantengo Catalytic estable en producción con guardias on-call 24/7."
+      },
+      {
         "years": "2022 — Hoy",
         "company": "Freelance",
         "role": "Front-End Developer · Remoto",
-        "description": "Athenaworks (SoundExchange, Whitepages) y Aurica, broker de metales preciosos líder en Chile."
-      },
-      {
-        "years": "2026 — Hoy",
-        "company": "Variacode",
-        "role": "Software Engineer ·  cliente: PagerDuty",
-        "description": "Desarrollo full stack para Catalytic y Rundeck, con foco en frontend, más guardias on-call 24/7 en Catalytic para garantizar la estabilidad del producto en producción."
+        "description": "He colaborado en productos internacionales vía Athenaworks (SoundExchange, Whitepages) y para Aurica, broker líder de metales preciosos en Chile, con React, Next.js y TypeScript."
       },
       {
         "years": "2023 — 2026",
         "company": "LVA Indices",
         "role": "Frontend Developer · Santiago",
-        "description": "Plataformas financieras con React, Next.js y TypeScript. Librería UI interna y optimización de pipelines CI/CD en AWS."
+        "description": "Construí plataformas financieras con React, Next.js y TypeScript. En paralelo creé librerías internas de componentes y utilidades para los proyectos de la empresa, desarrollé scrapers con Playwright e integré IA al equipo con un servidor MCP, agentes y Skills."
       },
       {
         "years": "2021 — 2023",
         "company": "Cencosud",
-        "role": "Front-End Developer · Santiago",
-        "description": "Lideré el front-end en varias iniciativas e-commerce. Migración de componentes legacy a React + Redux, ~35% más rápido."
+        "role": "Front-End Developer · Remoto",
+        "description": "Llevé los tótems de Retiro en tienda a 56 tiendas en todo Chile, desde programar el ticket que imprimen hasta monitorear cada instalación, con un tótem de pruebas en mi casa. Además lideré la migración a React + Redux que hizo ~35% más rápido el front-end."
       },
       {
         "years": "2020 — 2021",
         "company": "ACL",
-        "role": "Front-End Developer · cliente: Cencosud",
-        "description": "Componentes reutilizables con React y Material‑UI, integración de APIs REST."
+        "role": "Front-End Developer · Remoto · externo para Cencosud",
+        "description": "Amplié la librería de componentes reutilizables del equipo con React y Material‑UI, integrando APIs REST. Luego Cencosud me internalizó."
       },
       {
         "years": "2019 — 2020",
         "company": "Cumplo",
         "role": "Front-End Developer · Santiago",
-        "description": "Apps financieras con React, Redux y Apollo GraphQL, con foco en UI responsiva y accesible."
+        "description": "Lancé interfaces accesibles y responsivas para productos financieros digitales con React, Redux y Apollo GraphQL."
       },
       {
         "years": "2018 — 2019",
         "company": "La Agencia®",
         "role": "Desarrollador Web · Lima",
-        "description": "Interfaces responsivas con HTML5, CSS3, JavaScript y Bootstrap."
+        "description": "Llevé los diseños de distintos clientes a interfaces responsivas con HTML5, CSS3, JavaScript y Bootstrap, junto a diseñadores y project managers."
       },
       {
         "years": "2017 — 2018",
         "company": "MasterHelp",
         "role": "Coordinador de Desarrollo · Lima",
-        "description": "Lideré el desarrollo de MasterHelp.net y definí su arquitectura front-end."
+        "description": "Construí MasterHelp.net de principio a fin, definiendo el stack front-end y coordinando el trabajo técnico del equipo."
       }
     ],
     "educationKicker": "Estudios",
@@ -136,11 +136,7 @@
       },
       {
         "term": "2025",
-        "description": "Inglés general — EC English Language Centres"
-      },
-      {
-        "term": "Antes",
-        "description": "M&M Consultores, S&C Sistemas, Soluciones Medianet, Key Systems"
+        "description": "Inglés general y comunicación profesional — EC English Language Centres, Malta"
       }
     ]
   },

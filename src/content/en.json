@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "Jauregui Crespo CV"
+    "title": "Jauregui Crespo — Software Engineer"
   },
   "nav": {
     "about": "About",
@@ -16,28 +16,28 @@
     "variantDia": "Day"
   },
   "hero": {
-    "eyebrow": "Front-End Engineer — Santiago, Chile",
+    "eyebrow": "Software Engineer · Front-End — Santiago, Chile, 100% remote",
     "name": "Jauregui Crespo",
-    "ledeBefore": "I build scalable web apps with ",
+    "ledeBefore": "I build web products that scale with ",
     "ledeEmphasis": "React, Next.js and TypeScript",
-    "ledeAfter": " — and sweat the detail down to the last pixel.",
+    "ledeAfter": " (and keep them standing once they hit production).",
     "indicator": "Scroll. I'll keep an eye on you."
   },
   "about": {
     "kicker": "About",
-    "title": "More than 9 years turning designs into product.",
+    "title": "Nine-plus years turning designs into product.",
     "paragraphs": [
-      "I'm a Front-End Engineer born in Venezuela and based in Santiago, Chile. I specialize in React, Next.js and TypeScript, with a strong focus on UI architecture, performance and maintainable code.",
-      "I've shipped the full in-store pickup flow for Cencosud, worked on international products like SoundExchange, Whitepages and Campomar, built internal UI libraries published to AWS CodeArtifact, and migrated legacy front-ends to React + Redux."
+      "I'm a Computer Engineer, born in Venezuela and based in Santiago, Chile. I specialize in front-end with React, Next.js and TypeScript, and today I also build full stack for PagerDuty, where I take on-call shifts to keep a product stable in production.",
+      "I've worked on financial platforms and high-traffic e-commerce: I rolled out Cencosud's in-store pickup kiosks to 56 stores across Chile and built internal libraries for LVA Indices' projects. Today AI is part of how I work: I build MCP servers, agents and Skills that automate the team's repetitive work."
     ],
     "stats": [
       {
-        "label": "years in front-end",
+        "label": "years building for the web",
         "value": "9+"
       },
       {
         "label": "teams & clients",
-        "value": "11+"
+        "value": "15+"
       },
       {
         "label": "countries · VE · PE · CL",
@@ -49,7 +49,7 @@
     "kicker": "Spec sheet",
     "titleLine1": "Model JC‑26.",
     "titleLine2": "Specifications.",
-    "modelLine1": "Front-End · build 2016–2026",
+    "modelLine1": "Front-End + Full Stack · build 2017–2026",
     "modelLine2": "Weight: 0 kg of legacy code",
     "groups": [
       {
@@ -58,74 +58,74 @@
       },
       {
         "label": "Vision · glasses",
-        "text": "UI architecture · Accessibility · Web performance"
+        "text": "Component architecture · Accessibility · Web performance"
       },
       {
         "label": "Ears · listens to state",
-        "text": "Redux · React Query · Apollo GraphQL"
+        "text": "Redux · React Query · Apollo GraphQL · REST APIs"
       },
       {
         "label": "Nose · smells bugs",
-        "text": "Jest · Cypress · Testing Library"
+        "text": "Jest · Cypress · Playwright · Testing Library"
       },
       {
         "label": "Beard · grows with every deploy",
-        "text": "AWS · CI/CD · CodeArtifact · Git"
+        "text": "AWS · CI/CD · CodeArtifact · Git · 24/7 on-call"
       }
     ],
-    "tail": "Field-tested with Scrum, Kanban, Material-UI, SASS and Bootstrap."
+    "tail": "Field-tested with Scrum, Kanban, Material‑UI, SASS and Bootstrap, alongside UX, design and backend teams."
   },
   "work": {
     "kicker": "Work",
     "title": "Where I've built things.",
     "jobs": [
       {
+        "years": "2026 — Now",
+        "company": "Variacode",
+        "role": "Software Engineer · client: PagerDuty",
+        "description": "I ship full stack features across two PagerDuty products, Catalytic and Rundeck, designing the interfaces and their component architecture. I keep Catalytic stable in production through 24/7 on-call shifts."
+      },
+      {
         "years": "2022 — Now",
         "company": "Freelance",
         "role": "Front-End Developer · Remote",
-        "description": "Athenaworks (SoundExchange, Whitepages) and Aurica, Chile's leading precious-metals broker."
+        "description": "I've contributed to international products through Athenaworks (SoundExchange, Whitepages) and to Aurica, Chile's leading precious-metals broker, with React, Next.js and TypeScript."
       },
       {
-        "years": "2026 — Now",
-        "company": "Variacode",
-        "role": "Software Engineer ·  client: PagerDuty",
-        "description": "Full Stack for Catalytic and Rundeck, with a frontend focus, plus 24/7 on-call rotations for Catalytic ensuring product stability in production."
-      },
-      {
-        "years": "2023 — Now",
+        "years": "2023 — 2026",
         "company": "LVA Indices",
         "role": "Frontend Developer · Santiago",
-        "description": "Financial platforms with React, Next.js and TypeScript. Built an internal UI library and optimized CI/CD pipelines on AWS."
+        "description": "Built financial platforms with React, Next.js and TypeScript. Alongside that, I created internal component and utility libraries for the company's projects, developed scrapers with Playwright, and brought AI into the team's workflow with an MCP server, agents and Skills."
       },
       {
         "years": "2021 — 2023",
         "company": "Cencosud",
-        "role": "Front-End Developer · Santiago",
-        "description": "Led front-end on several e-commerce initiatives. Migrated legacy components to React + Redux, ~35% faster."
+        "role": "Front-End Developer · Remote",
+        "description": "Rolled out in-store pickup kiosks to 56 stores across Chile, from coding the ticket they print to monitoring every installation, with a test kiosk at my home. I also led the React + Redux migration that made the front-end ~35% faster."
       },
       {
         "years": "2020 — 2021",
         "company": "ACL",
-        "role": "Front-End Developer · client: Cencosud",
-        "description": "Reusable components with React and Material-UI, REST API integration."
+        "role": "Front-End Developer · Remote · contractor for Cencosud",
+        "description": "Expanded the team's reusable component library with React and Material‑UI, integrating REST APIs. Cencosud later brought me in-house."
       },
       {
         "years": "2019 — 2020",
         "company": "Cumplo",
         "role": "Front-End Developer · Santiago",
-        "description": "Financial apps with React, Redux and Apollo GraphQL, with a focus on responsive, accessible UI."
+        "description": "Shipped accessible, responsive interfaces for digital financial products with React, Redux and Apollo GraphQL."
       },
       {
         "years": "2018 — 2019",
         "company": "La Agencia®",
         "role": "Web Developer · Lima",
-        "description": "Responsive interfaces with HTML5, CSS3, JavaScript and Bootstrap."
+        "description": "Turned client designs into responsive interfaces with HTML5, CSS3, JavaScript and Bootstrap, working with designers and project managers."
       },
       {
         "years": "2017 — 2018",
         "company": "MasterHelp",
         "role": "Development Lead · Lima",
-        "description": "Led development of MasterHelp.net and defined its front-end architecture."
+        "description": "Built MasterHelp.net end to end, defining the front-end stack and coordinating the team's technical work."
       }
     ],
     "educationKicker": "Education",
@@ -136,11 +136,7 @@
       },
       {
         "term": "2025",
-        "description": "General English — EC English Language Centres"
-      },
-      {
-        "term": "Before",
-        "description": "M&M Consultores, S&C Sistemas, Soluciones Medianet, Key Systems"
+        "description": "General English & professional communication — EC English Language Centres, Malta"
       }
     ]
   },
@@ -152,7 +148,7 @@
     "copyLabel": "Copy email",
     "copiedLabel": "Copied",
     "locationLabel": "Based in",
-    "locationValue": "Santiago, Chile — remote friendly"
+    "locationValue": "Santiago, Chile — 100% remote"
   },
   "speech": {
     "lines": [
