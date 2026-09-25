@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import type { MutableRefObject } from 'react'
 import { Vector3 } from 'three'
@@ -243,6 +243,23 @@ export function useAvatarPoseFrame({
   // no glance in flight), `nextGlanceAt` is the clock time of the next one.
   const glanceRef = useRef(1)
   const nextGlanceAtRef = useRef(4 + Math.random() * 2)
+  // Cursor-follow (brief 4.3): r3f's own `state.pointer` only updates from
+  // events on the canvas DOM element, but the canvas is `pointer-events:
+  // none` (Stage.css) so it never receives them — same reason
+  // `AvatarTapListener` (Avatar.tsx) manually listens on `window` for
+  // clicks instead of relying on r3f's per-mesh `onClick`.
+  const pointerRef = useRef({ x: 0, y: 0 })
+
+  useEffect(() => {
+    function onPointerMove(event: PointerEvent) {
+      pointerRef.current = {
+        x: (event.clientX / window.innerWidth) * 2 - 1,
+        y: -(event.clientY / window.innerHeight) * 2 + 1,
+      }
+    }
+    window.addEventListener('pointermove', onPointerMove)
+    return () => window.removeEventListener('pointermove', onPointerMove)
+  }, [])
 
   useFrame((state, delta) => {
     const group = poseGroupRef.current
@@ -340,7 +357,7 @@ export function useAvatarPoseFrame({
     const breathe = reducedMotion ? 1 : breatheFactor(clock)
     const { rx, ry } = reducedMotion
       ? { rx: 0, ry: 0 }
-      : cursorRotation(current.look, state.pointer.x, state.pointer.y)
+      : cursorRotation(current.look, pointerRef.current.x, pointerRef.current.y)
 
     // Mobile brief §4 "Interacción táctil" — no cursor on touch, so scroll
     // speed tilts the head instead: `rx += clamp(vel/2600, -0.3, 0.3)`,
