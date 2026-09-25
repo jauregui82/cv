@@ -97,15 +97,16 @@ export function breatheFactor(clock: number): number {
 }
 
 /**
- * Cursor-follow, brief v2 §5: `ry += look*mx*0.62`, `rx += look*my*0.24`.
+ * Cursor-follow, brief v2 §5: `ry += look*mx*0.62`, `rx += look*my*0.24`,
+ * bumped ~40% past the brief's own values for a more responsive feel.
  * `pointerX`/`pointerY` are r3f's NDC pointer (-1..1, Y up); mockup.html's
  * `my` is screen-space (Y down), so the Y term is negated here to match the
  * same visual tilt direction.
  */
 export function cursorRotation(look: number, pointerX: number, pointerY: number) {
   return {
-    rx: look * -pointerY * 0.24,
-    ry: look * pointerX * 0.62,
+    rx: look * -pointerY * 0.34,
+    ry: look * pointerX * 0.88,
   }
 }
 
