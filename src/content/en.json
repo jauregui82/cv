@@ -81,8 +81,8 @@
     "jobs": [
       {
         "years": "2026 — Now",
-        "company": "Variacode",
-        "role": "Software Engineer · client: PagerDuty",
+        "company": "PagerDuty",
+        "role": "Software Engineer",
         "description": "I ship full stack features across two PagerDuty products, Catalytic and Rundeck, designing the interfaces and their component architecture. I keep Catalytic stable in production through 24/7 on-call shifts."
       },
       {

@@ -16,8 +16,8 @@ cv:
     - Bring AI into team workflows by building MCP servers, agents and Skills that automate repetitive work.
 
     experience:
-      - company: Variacode
-        position: "Software Engineer (Client: PagerDuty)"
+      - company: PagerDuty
+        position: "Software Engineer (contractor via Variacode)"
         start_date: 2026
         end_date: present
         location: Remote

@@ -16,8 +16,8 @@ cv:
     - Integro la IA al flujo de desarrollo de los equipos creando servidores MCP, agentes y Skills que automatizan tareas repetitivas.
 
     experience:
-      - company: Variacode
-        position: "Software Engineer (Cliente: PagerDuty)"
+      - company: PagerDuty
+        position: "Software Engineer (externo vía Variacode)"
         start_date: 2026
         end_date: present
         location: Remoto
