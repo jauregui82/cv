@@ -1,9 +1,8 @@
 cv:
   name: Jauregui Crespo
   location: Santiago, Chile (100% remoto)
-  email: jauregui.crespo@gmail.com
-  phone: +56 9 3739 3963
-  website: https://jauregui82.github.io/cv/
+  email: jauregui82.dev@gmail.com
+  website: https://soyjau.com
   social_networks:
     - network: GitHub
       username: jauregui82
@@ -16,8 +15,8 @@ cv:
     - Integro la IA al flujo de desarrollo de los equipos creando servidores MCP, agentes y Skills que automatizan tareas repetitivas.
 
     experience:
-      - company: Variacode
-        position: "Software Engineer (Cliente: PagerDuty)"
+      - company: PagerDuty
+        position: "Software Engineer (externo vía Variacode)"
         start_date: 2026
         end_date: present
         location: Remoto
