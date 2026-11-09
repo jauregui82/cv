@@ -26,13 +26,15 @@ import type { PokeKind } from './store'
 /**
  * Model-space anchor points for the Stack section's leader lines (brief v2
  * §6, head-only model). Order matches `content.specs.groups` in
- * `es.json`/`en.json`: Cerebro·moño, Visión·gafas, Oído, Olfato, Barba.
+ * `es.json`/`en.json`: Cerebro·moño, Visión·gafas, Oído, Olfato, Boca,
+ * Barba.
  */
 const SPEC_ANCHORS: readonly Vector3[] = [
   new Vector3(0.02, 0.48, -0.2), // Cerebro · moño
   new Vector3(0.2, -0.08, 0.33), // Visión · gafas
   new Vector3(-0.36, -0.06, -0.11), // Oído
   new Vector3(0.03, -0.17, 0.38), // Olfato
+  new Vector3(0, -0.29, 0.28), // Boca
   new Vector3(-0.06, -0.43, 0.28), // Barba
 ]
 
@@ -46,6 +48,7 @@ const SPEC_NORMALS: readonly Vector3[] = [
   new Vector3(0, 0, 1).normalize(),
   new Vector3(-1, 0, 0).normalize(),
   new Vector3(0, 0, 1).normalize(),
+  new Vector3(0, -0.3, 1).normalize(),
   new Vector3(0, -0.4, 1).normalize(),
 ]
 

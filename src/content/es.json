@@ -69,6 +69,10 @@
         "text": "Jest · Cypress · Playwright · Testing Library"
       },
       {
+        "label": "Boca · habla inglés",
+        "text": "Inglés B2 · Nivel intermedio"
+      },
+      {
         "label": "Barba · crece con cada deploy",
         "text": "AWS · CI/CD · CodeArtifact · Git · On-call 24/7"
       }

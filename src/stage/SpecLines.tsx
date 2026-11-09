@@ -9,7 +9,7 @@ import './SpecLines.css'
  * the affirmative on that frame's slightly-less-than-exact `p`. */
 const REVEAL_STEP = 0.14
 const REVEAL_SLACK = 0.02
-const TAG_COUNT = 5
+const TAG_COUNT = 6
 
 interface CalloutRef {
   el: HTMLElement

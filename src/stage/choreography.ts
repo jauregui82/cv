@@ -20,17 +20,18 @@ export const SPECS_SECTION_INDEX: SectionIndex = 2
 export const WORK_SECTION_INDEX: SectionIndex = 3
 
 /**
- * Mobile brief §3.1: the 5 head turns that show each Stack part to the
+ * Mobile brief §3.1: the head turns that show each Stack part to the
  * camera, one at a time, over the sticky scroll budget. Same order as
  * `content.specs.groups` / `SPEC_ANCHORS` (`layers.ts`) — Cerebro, Visión,
- * Oído, Olfato, Barba. Rotations only (not anchor positions — those are
- * `SPEC_ANCHORS`, separately calibrated against the actual model).
+ * Oído, Olfato, Boca, Barba. Rotations only (not anchor positions — those
+ * are `SPEC_ANCHORS`, separately calibrated against the actual model).
  */
 export const SPEC_MOBILE_PART_POSE: readonly { ry: number; rx: number }[] = [
   { ry: 0, rx: 0.62 },
   { ry: 0.12, rx: 0 },
   { ry: 1.25, rx: 0 },
   { ry: -1.1, rx: 0 },
+  { ry: 0, rx: -0.2 },
   { ry: 0, rx: -0.42 },
 ]
 

@@ -7,7 +7,7 @@ import './Specs.css'
 
 /** Brief 5.4's per-tag vertical position within `.specs__callouts` — ported
  * verbatim from mockup.html's `style="top:X%"` inline attributes. */
-const CALLOUT_TOP_PERCENT = [4, 22, 44, 60, 80]
+const CALLOUT_TOP_PERCENT = [4, 19, 34, 50, 65, 80]
 
 /** Mobile brief §3: the card's 180ms fade when the active part changes —
  * mirrors mockup.html's `card.classList.add('swap')` timing. */
